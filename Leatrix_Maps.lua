@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.105 (13th May 2021)
+	-- 	Leatrix Maps 1.13.106.alpha.1 (15th May 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.105"
+	LeaMapsLC["AddonVer"] = "1.13.106.alpha.1"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -66,7 +66,7 @@
 
 			-- Add controls
 			LeaMapsLC:MakeTx(battleFrame, "Settings", 16, -72)
-			LeaMapsLC:MakeSL(battleFrame, "BattleGroupIconSize", "Group Icons", "Drag to set the group icon size.", 20, 40, 1, 36, -122, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattleGroupIconSize", "Group Icons", "Drag to set the group icon size.", 10, 40, 1, 36, -122, "%.0f")
 			LeaMapsLC:MakeSL(battleFrame, "BattlePlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.", 12, 24, 1, 36, -182, "%.0f")
 			LeaMapsLC:MakeSL(battleFrame, "BattleMapSize", "Map Size", "Drag to set the battlefield map size.", 0.5, 3, 0.1, 206, -182, "%.0f")
 
@@ -2618,7 +2618,7 @@
 
 			-- More
 			LeaMapsLC:LoadVarChk("EnhanceBattleMap", "Off")				-- Enhance battlefield map
-			LeaMapsLC:LoadVarNum("BattleGroupIconSize", 20, 20, 40)		-- Battlefield group icon size
+			LeaMapsLC:LoadVarNum("BattleGroupIconSize", 20, 10, 40)		-- Battlefield group icon size
 			LeaMapsLC:LoadVarNum("BattlePlayerArrowSize", 12, 12, 24)	-- Battlefield player arrow size
 			LeaMapsLC:LoadVarNum("BattleMapSize", 1, 0.5, 3)			-- Battlefield map size
 			LeaMapsLC:LoadVarChk("ShowMinimapIcon", "On")				-- Show minimap button
