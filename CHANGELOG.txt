@@ -1,3 +1,6 @@
+1.13.107 - 26th May 2021
+- Maintenance update.
+
 1.13.106 - 20th May 2021
 - Enhance battlefield map - group icon size range is now 50% to 200%.
 
