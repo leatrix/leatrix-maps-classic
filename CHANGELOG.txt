@@ -1,5 +1,5 @@
-1.13.109 - 9th June 2021
-- Maintenance update.
+1.13.110.alpha.1 - 13th June 2021
+- Added 'Show spirit healers' to 'Show points of interest'.  It's enabled by default.
 
 1.13.106 - 20th May 2021
 - Enhance battlefield map - group icon size range is now 50% to 200%.
