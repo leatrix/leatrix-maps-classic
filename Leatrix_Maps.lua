@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.110.alpha.1 (13th June 2021)
+	-- 	Leatrix Maps 1.13.110.alpha.2 (13th June 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.110.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.13.110.alpha.2"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -1401,7 +1401,7 @@
 					{"Dungeon", 52.6, 49.0, L["Ragefire Chasm"], L["Dungeon"], dnTex, 13, 18},
 					{"FlightH", 45.1, 63.9, L["Valley of Strength"] .. ", " .. L["Orgrimmar"], nil, tHTex, nil, nil},
 				},
-				--[[Thunder Bluff ]] [1456] = {
+				--[[Thunder Bluff]] [1456] = {
 					{"FlightH", 47.0, 49.8, L["Central Mesa"] .. ", " .. L["Thunder Bluff"], nil, tHTex, nil, nil},
 					{"Spirit", 56.7, 19.1, L["Spirit Healer"], nil, spTex, nil, nil},
 				},
