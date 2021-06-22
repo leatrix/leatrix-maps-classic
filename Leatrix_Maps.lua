@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.110 (16th June 2021)
+	-- 	Leatrix Maps 1.13.111.alpha.1 (22nd June 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.110"
+	LeaMapsLC["AddonVer"] = "1.13.111.alpha.1"
 	LeaMapsLC["RestartReq"] = nil
 
 	-- Get locale table
@@ -58,6 +58,14 @@
 
 		if LeaMapsLC["EnhanceBattleMap"] == "On" then
 
+			-- Load Battlefield addon
+			if not IsAddOnLoaded("Blizzard_BattlefieldMap") then
+				RunScript('UIParentLoadAddOn("Blizzard_BattlefieldMap")')
+			end
+
+			-- Show teammates
+			RunScript('BattlefieldMapOptions.showPlayers = true')
+
 			-- Group icon texture
 			local partyTexture = "Interface\\AddOns\\Leatrix_Maps\\Leatrix_Maps_Icon.blp"
 
@@ -66,48 +74,105 @@
 
 			-- Add controls
 			LeaMapsLC:MakeTx(battleFrame, "Settings", 16, -72)
-			LeaMapsLC:MakeSL(battleFrame, "BattleGroupIconSize", "Group Icons", "Drag to set the group icon size.", 10, 40, 1, 36, -122, "%.0f")
-			LeaMapsLC:MakeSL(battleFrame, "BattlePlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.", 12, 24, 1, 36, -182, "%.0f")
-			LeaMapsLC:MakeSL(battleFrame, "BattleMapSize", "Map Size", "Drag to set the battlefield map size.", 0.5, 3, 0.1, 206, -182, "%.0f")
+			LeaMapsLC:MakeCB(battleFrame, "UnlockBattlefield", "Unlock battlefield map", 16, -92, false, "If checked, you can move the battlefield map by dragging any of its borders.")
+			LeaMapsLC:MakeSL(battleFrame, "BattleGroupIconSize", "Group Icons", "Drag to set the group icon size.", 12, 24, 1, 206, -152, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattlePlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.", 12, 24, 1, 36, -152, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattleMapSize", "Map Size", "Drag to set the battlefield map size.", 0.5, 3, 0.1, 36, -212, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattleMapOpacity", "Map Opacity", "Drag to set the battlefield map opacity.", 0.1, 1, 0.1, 206, -212, "%.0f")
 
 			-- Add preview texture
 			local prevIcon = battleFrame:CreateTexture(nil, "ARTWORK")
-			prevIcon:SetPoint("CENTER", battleFrame, "TOPLEFT", 240, -132)
+			prevIcon:SetPoint("CENTER", battleFrame, "TOPLEFT", 400, -162)
 			prevIcon:SetTexture(partyTexture)
 			prevIcon:SetSize(30,30)
 			prevIcon:SetVertexColor(0.78, 0.61, 0.43, 1)
+
+			-- Hide battlefield tab button
+			hooksecurefunc(BattlefieldMapTab, "Show", function() BattlefieldMapTab:Hide() end)
+
+			-- Make battlefield map movable
+			BattlefieldMapFrame:SetMovable(true)
+			BattlefieldMapFrame:SetUserPlaced(true)
+			BattlefieldMapFrame:SetDontSavePosition(true)
+			BattlefieldMapFrame:SetClampedToScreen(true)
+
+			-- Set battleifeld map position at startup
+			BattlefieldMapFrame:ClearAllPoints()
+			BattlefieldMapFrame:SetPoint(LeaMapsLC["BattleMapA"], UIParent, LeaMapsLC["BattleMapR"], LeaMapsLC["BattleMapX"], LeaMapsLC["BattleMapY"])
+
+			-- Unlock battlefield map frame
+			local eFrame = CreateFrame("Frame", nil, BattlefieldMapFrame.ScrollContainer)
+			eFrame:SetPoint("TOPLEFT", 0, 0)
+			eFrame:SetPoint("BOTTOMRIGHT", 0, 0)
+			eFrame:SetFrameLevel(BattlefieldMapFrame:GetFrameLevel() - 1)
+			eFrame:SetHitRectInsets(-15, -15, -15, -15)
+			eFrame:SetAlpha(0)
+			eFrame:EnableMouse(true)
+			eFrame:RegisterForDrag("LeftButton")
+			eFrame:SetScript("OnMouseDown", function()
+				if LeaMapsLC["UnlockBattlefield"] == "On" then
+					BattlefieldMapFrame:StartMoving()
+				end
+			end)
+			eFrame:SetScript("OnMouseUp", function() 
+				-- Save frame positions
+				BattlefieldMapFrame:StopMovingOrSizing()
+				LeaMapsLC["BattleMapA"], void, LeaMapsLC["BattleMapR"], LeaMapsLC["BattleMapX"], LeaMapsLC["BattleMapY"] = BattlefieldMapFrame:GetPoint()
+				BattlefieldMapFrame:SetMovable(true)
+				BattlefieldMapFrame:ClearAllPoints()
+				BattlefieldMapFrame:SetPoint(LeaMapsLC["BattleMapA"], UIParent, LeaMapsLC["BattleMapR"], LeaMapsLC["BattleMapX"], LeaMapsLC["BattleMapY"])
+			end)
+
+			-- Enable unlock border only when unlock is enabled
+			local function SetUnlockBorder()
+				if LeaMapsLC["UnlockBattlefield"] == "On" then
+					eFrame:Show()
+				else
+					eFrame:Hide()
+				end
+			end
+
+			-- Set unlock border when option is clicked and on startup
+			LeaMapsCB["UnlockBattlefield"]:HookScript("OnClick", SetUnlockBorder)
+			SetUnlockBorder()
+
+			-- Toggle battlefield map frame with configuration panel
+			battleFrame:HookScript("OnShow", function()
+				if BattlefieldMapFrame:IsShown() then LeaMapsLC.BFMapWasShown = true else LeaMapsLC.BFMapWasShown = false end
+				RunScript('BattlefieldMapFrame:Show()')
+			end)
+			battleFrame:HookScript("OnHide", function()
+				if not LeaMapsLC.BFMapWasShown then RunScript('BattlefieldMapFrame:Hide()') end
+			end)
 
 			----------------------------------------------------------------------
 			-- Map size
 			----------------------------------------------------------------------
 
-			-- Function to set map size on demand 
+			-- Function to set map size
 			local function DoMapSize()
 				LeaMapsCB["BattleMapSize"].f:SetFormattedText("%.0f%%", LeaMapsLC["BattleMapSize"] * 100)
-				if IsAddOnLoaded("Blizzard_BattlefieldMap") then
-					BattlefieldMapFrame:SetSize(LeaMapsLC.origMapWidth * LeaMapsLC["BattleMapSize"], LeaMapsLC.origMapHeight * LeaMapsLC["BattleMapSize"])
-					BattlefieldMapFrame:OnFrameSizeChanged()
-				end
+				BattlefieldMapFrame:SetSize(270 * LeaMapsLC["BattleMapSize"], 180 * LeaMapsLC["BattleMapSize"])
+				BattlefieldMapFrame:OnFrameSizeChanged()
 			end
 
-			-- Configure settings when battlefield UI is available
-			local function SetMapSize()
-				-- Reset map position if reset button was clicked before battlefield map was available
-				if LeaMapsLC.resetBattlefieldMap then
-					C_Timer.After(0, function()
-						BattlefieldMapTab:ClearAllPoints()
-						BattlefieldMapTab:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMRIGHT", -BATTLEFIELD_MAP_WIDTH-CONTAINER_OFFSET_X, BATTLEFIELD_TAB_OFFSET_Y)
-						LeaMapsLC.resetBattlefieldMap = nil
-					end)
-				end
-				-- Set map size
-				LeaMapsLC.origMapWidth, LeaMapsLC.origMapHeight = BattlefieldMapFrame:GetWidth(), BattlefieldMapFrame:GetHeight()
-				DoMapSize()
-				-- Fix tab frame strata so it matches the battlefield map frame
-				BattlefieldMapTab:SetFrameStrata(BattlefieldMapFrame:GetFrameStrata())
-			end
-
+			-- Set size when slider is changed and on startup
 			LeaMapsCB["BattleMapSize"]:HookScript("OnValueChanged", DoMapSize)
+			DoMapSize()
+
+			----------------------------------------------------------------------
+			-- Map opacity
+			----------------------------------------------------------------------
+
+			local function DoMapOpacity()
+				LeaMapsCB["BattleMapOpacity"].f:SetFormattedText("%.0f%%", LeaMapsLC["BattleMapOpacity"] * 100)
+				BattlefieldMapOptions.opacity = 1-LeaMapsLC["BattleMapOpacity"]
+				RunScript('BattlefieldMapFrame:RefreshAlpha()')
+			end
+
+			-- Set opacity when slider is changed and on startup
+			LeaMapsCB["BattleMapOpacity"]:HookScript("OnValueChanged", DoMapOpacity)
+			DoMapOpacity()
 
 			----------------------------------------------------------------------
 			-- Player arrow
@@ -125,8 +190,9 @@
 				end
 			end
 
-			-- Set player arrow when option is changed (it's run on startup by waitFrame)
+			-- Set player arrow when option is changed and on startup
 			LeaMapsCB["BattlePlayerArrowSize"]:HookScript("OnValueChanged", SetPlayerArrow)
+			SetPlayerArrow()
 
 			----------------------------------------------------------------------
 			-- Group icons
@@ -165,15 +231,16 @@
 				end
 			end
 
-			-- Function to refresh size slider and update battlefield map if it's loaded
+			-- Function to refresh size slider and update battlefield map
 			local function SetIconSize()
-				LeaMapsCB["BattleGroupIconSize"].f:SetText(LeaMapsLC["BattleGroupIconSize"] .. " (" .. string.format("%.0f%%", LeaMapsLC["BattleGroupIconSize"] / 20 * 100) .. ")")
-				if IsAddOnLoaded("Blizzard_BattlefieldMap") then FixGroupPin() end
+				LeaMapsCB["BattleGroupIconSize"].f:SetText(LeaMapsLC["BattleGroupIconSize"] .. " (" .. string.format("%.0f%%", LeaMapsLC["BattleGroupIconSize"] / 12 * 100) .. ")")
+				FixGroupPin()
 				prevIcon:SetSize(LeaMapsLC["BattleGroupIconSize"], LeaMapsLC["BattleGroupIconSize"])
 			end
 
-			-- Set group icons when option is changed (it's run on startup by waitFrame)
+			-- Set group icons when option is changed and on startup
 			LeaMapsCB["BattleGroupIconSize"]:HookScript("OnValueChanged", SetIconSize)
+			FixGroupPin(true)
 
 			----------------------------------------------------------------------
 			-- Rest of configuration panel
@@ -187,20 +254,19 @@
 
 			-- Reset button click
 			battleFrame.r:HookScript("OnClick", function()
-				LeaMapsLC["BattleGroupIconSize"] = 20
+				LeaMapsLC["UnlockBattlefield"] = "On"
+				LeaMapsLC["BattleGroupIconSize"] = 12
 				LeaMapsLC["BattlePlayerArrowSize"] = 12
 				LeaMapsLC["BattleMapSize"] = 1
+				LeaMapsLC["BattleMapOpacity"] = 1
+				LeaMapsLC["BattleMapA"], LeaMapsLC["BattleMapR"], LeaMapsLC["BattleMapX"], LeaMapsLC["BattleMapY"] = "BOTTOMRIGHT", "BOTTOMRIGHT", -47, 83
+				BattlefieldMapFrame:ClearAllPoints()
+				BattlefieldMapFrame:SetPoint(LeaMapsLC["BattleMapA"], UIParent, LeaMapsLC["BattleMapR"], LeaMapsLC["BattleMapX"], LeaMapsLC["BattleMapY"])
 				SetIconSize()
 				SetPlayerArrow()
 				DoMapSize()
-				if IsAddOnLoaded("Blizzard_BattlefieldMap") then
-					-- Battlefield map is loaded so reset position
-					BattlefieldMapTab:ClearAllPoints()
-					BattlefieldMapTab:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMRIGHT", -BATTLEFIELD_MAP_WIDTH-CONTAINER_OFFSET_X, BATTLEFIELD_TAB_OFFSET_Y)
-				else
-					-- Battlefield map is not loaded so reset position when it is
-					LeaMapsLC.resetBattlefieldMap = true
-				end
+				DoMapOpacity()
+				SetUnlockBorder()
 				battleFrame:Hide(); battleFrame:Show()
 			end)
 
@@ -208,44 +274,25 @@
 			LeaMapsCB["EnhanceBattleMapBtn"]:HookScript("OnClick", function()
 				if IsShiftKeyDown() and IsControlKeyDown() then
 					-- Preset profile
-					LeaMapsLC["BattleGroupIconSize"] = 20
+					LeaMapsLC["UnlockBattlefield"] = "On"
+					LeaMapsLC["BattleGroupIconSize"] = 12
 					LeaMapsLC["BattlePlayerArrowSize"] = 12
 					LeaMapsLC["BattleMapSize"] = 1
+					LeaMapsLC["BattleMapOpacity"] = 1
+					LeaMapsLC["BattleMapA"], LeaMapsLC["BattleMapR"], LeaMapsLC["BattleMapX"], LeaMapsLC["BattleMapY"] = "BOTTOMRIGHT", "BOTTOMRIGHT", -47, 83
+					BattlefieldMapFrame:ClearAllPoints()
+					BattlefieldMapFrame:SetPoint(LeaMapsLC["BattleMapA"], UIParent, LeaMapsLC["BattleMapR"], LeaMapsLC["BattleMapX"], LeaMapsLC["BattleMapY"])
 					SetIconSize()
 					SetPlayerArrow()
 					DoMapSize()
-					if IsAddOnLoaded("Blizzard_BattlefieldMap") then
-						-- Battlefield map is loaded so reset position
-						BattlefieldMapTab:ClearAllPoints()
-						BattlefieldMapTab:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMRIGHT", -BATTLEFIELD_MAP_WIDTH-CONTAINER_OFFSET_X, BATTLEFIELD_TAB_OFFSET_Y)
-					else
-						-- Battlefield map is not loaded so reset position when it is
-						LeaMapsLC.resetBattlefieldMap = true
-					end
+					DoMapOpacity()
+					SetUnlockBorder()
 					if battleFrame:IsShown() then battleFrame:Hide(); battleFrame:Show(); end
 				else
 					battleFrame:Show()
 					LeaMapsLC["PageF"]:Hide()
 				end
 			end)
-
-			-- Set group icons when battlefield map is loaded
-			if IsAddOnLoaded("Blizzard_BattlefieldMap") then
-				FixGroupPin(true)
-				C_Timer.After(0, SetPlayerArrow)
-				SetMapSize()
-			else
-				local waitFrame = CreateFrame("FRAME")
-				waitFrame:RegisterEvent("ADDON_LOADED")
-				waitFrame:SetScript("OnEvent", function(self, event, arg1)
-					if arg1 == "Blizzard_BattlefieldMap" then
-						FixGroupPin(true)
-						C_Timer.After(0, SetPlayerArrow)
-						SetMapSize()
-						waitFrame:UnregisterAllEvents()
-					end
-				end)
-			end
 
 		end
 
@@ -2637,9 +2684,16 @@
 
 				-- More
 				LeaMapsDB["EnhanceBattleMap"] = "On"
-				LeaMapsDB["BattleGroupIconSize"] = 20
+				LeaMapsDB["UnlockBattlefield"] = "On"
+				LeaMapsDB["BattleGroupIconSize"] = 12
 				LeaMapsDB["BattlePlayerArrowSize"] = 12
 				LeaMapsDB["BattleMapSize"] = 1
+				LeaMapsDB["BattleMapOpacity"] = 1
+				LeaMapsDB["BattleMapA"] = "BOTTOMRIGHT"
+				LeaMapsDB["BattleMapR"] = "BOTTOMRIGHT"
+				LeaMapsDB["BattleMapX"] = -47
+				LeaMapsDB["BattleMapY"] = 83
+
 				LeaMapsDB["ShowMinimapIcon"] = "On"
 				LeaMapsDB["minimapPos"] = 204 -- LeaMapsDB
 
@@ -2735,9 +2789,16 @@
 
 			-- More
 			LeaMapsLC:LoadVarChk("EnhanceBattleMap", "Off")				-- Enhance battlefield map
-			LeaMapsLC:LoadVarNum("BattleGroupIconSize", 20, 10, 40)		-- Battlefield group icon size
+			LeaMapsLC:LoadVarChk("UnlockBattlefield", "On")				-- Unlock battlefield map
+			LeaMapsLC:LoadVarNum("BattleGroupIconSize", 12, 12, 24)		-- Battlefield group icon size
 			LeaMapsLC:LoadVarNum("BattlePlayerArrowSize", 12, 12, 24)	-- Battlefield player arrow size
 			LeaMapsLC:LoadVarNum("BattleMapSize", 1, 0.5, 3)			-- Battlefield map size
+			LeaMapsLC:LoadVarNum("BattleMapOpacity", 1, 0.1, 1)			-- Battlefield map opacity
+			LeaMapsLC:LoadVarAnc("BattleMapA", "BOTTOMRIGHT")			-- Battlefield map anchor
+			LeaMapsLC:LoadVarAnc("BattleMapR", "BOTTOMRIGHT")			-- Battlefield map relative
+			LeaMapsLC:LoadVarNum("BattleMapX", -47, -5000, 5000)		-- Battlefield map X axis
+			LeaMapsLC:LoadVarNum("BattleMapY", 83, -5000, 5000)			-- Battlefield map Y axis
+
 			LeaMapsLC:LoadVarChk("ShowMinimapIcon", "On")				-- Show minimap button
 
 			-- Panel
@@ -2799,9 +2860,16 @@
 
 			-- More
 			LeaMapsDB["EnhanceBattleMap"] = LeaMapsLC["EnhanceBattleMap"]
+			LeaMapsDB["UnlockBattlefield"] = LeaMapsLC["UnlockBattlefield"]
 			LeaMapsDB["BattleGroupIconSize"] = LeaMapsLC["BattleGroupIconSize"]
 			LeaMapsDB["BattlePlayerArrowSize"] = LeaMapsLC["BattlePlayerArrowSize"]
 			LeaMapsDB["BattleMapSize"] = LeaMapsLC["BattleMapSize"]
+			LeaMapsDB["BattleMapOpacity"] = LeaMapsLC["BattleMapOpacity"]
+			LeaMapsDB["BattleMapA"] = LeaMapsLC["BattleMapA"]
+			LeaMapsDB["BattleMapR"] = LeaMapsLC["BattleMapR"]
+			LeaMapsDB["BattleMapX"] = LeaMapsLC["BattleMapX"]
+			LeaMapsDB["BattleMapY"] = LeaMapsLC["BattleMapY"]
+
 			LeaMapsDB["ShowMinimapIcon"] = LeaMapsLC["ShowMinimapIcon"]
 
 			-- Panel
