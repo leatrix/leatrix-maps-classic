@@ -1,4 +1,4 @@
-1.13.111.alpha.1 - 22nd June 2021
+1.13.111 - 24th June 2021
 - If 'Enhance battlefield map' is enabled, battlefield map position and opacity are now both set from the configuration panel.
 
 1.13.110 - 16th June 2021
