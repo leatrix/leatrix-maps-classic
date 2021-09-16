@@ -1,4 +1,4 @@
-1.13.119.alpha.1 - 6th September 2021
+1.13.119 - 16th September 2021
 - Maintenance update.
 
 1.13.118 - 19th August 2021
