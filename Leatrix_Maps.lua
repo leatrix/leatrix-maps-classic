@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.13.119 (16th September 2021)
+	-- 	Leatrix Maps 1.14.00 (29th September 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,8 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.13.119"
-	LeaMapsLC["RestartReq"] = nil
+	LeaMapsLC["AddonVer"] = "1.14.00"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -26,17 +25,6 @@
 			-- Game client is not Wow Classic
 			C_Timer.After(2, function()
 				print(L["LEATRIX MAPS: WRONG VERSION INSTALLED!"])
-			end)
-			return
-		end
-	end
-
-	-- If client restart is required and has not been done, show warning and quit
-	if LeaMapsLC["RestartReq"] then
-		local metaVer = GetAddOnMetadata("Leatrix_Maps", "Version")
-		if metaVer and metaVer ~= LeaMapsLC["AddonVer"] then
-			C_Timer.After(1, function()
-				print(L["NOTICE!|nYou must fully restart your game client before you can use this version of Leatrix Maps."])
 			end)
 			return
 		end
