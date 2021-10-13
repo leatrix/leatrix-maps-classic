@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.03.alpha.1 (13th October 2021)
+	-- 	Leatrix Maps 1.14.03.alpha.2 (13th October 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.03.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.14.03.alpha.2"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -69,14 +69,14 @@
 			LeaMapsLC:MakeCB(battleFrame, "UnlockBattlefield", "Unlock battlefield map", 16, -92, false, "If checked, you can move the battlefield map by dragging any of its borders.")
 			LeaMapsLC:MakeCB(battleFrame, "BattleCenterOnPlayer", "Center map on player", 16, -112, false, "If checked, the battlefield map will stay centered on your location as long as you are not dragging the map or in a dungeon.")
 
-			LeaMapsLC:MakeSL(battleFrame, "BattleGroupIconSize", "Group Icons", "Drag to set the group icon size.", 12, 24, 1, 206, -162, "%.0f")
-			LeaMapsLC:MakeSL(battleFrame, "BattlePlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.", 12, 24, 1, 36, -162, "%.0f")
-			LeaMapsLC:MakeSL(battleFrame, "BattleMapSize", "Map Size", "Drag to set the battlefield map size.", 0.5, 3, 0.1, 36, -222, "%.0f")
-			LeaMapsLC:MakeSL(battleFrame, "BattleMapOpacity", "Map Opacity", "Drag to set the battlefield map opacity.", 0.1, 1, 0.1, 206, -222, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattleGroupIconSize", "Group Icons", "Drag to set the group icon size.", 12, 24, 1, 206, -172, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattlePlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.", 12, 24, 1, 36, -172, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattleMapSize", "Map Size", "Drag to set the battlefield map size.", 0.5, 3, 0.1, 36, -232, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattleMapOpacity", "Map Opacity", "Drag to set the battlefield map opacity.", 0.1, 1, 0.1, 206, -232, "%.0f")
 
 			-- Add preview texture
 			local prevIcon = battleFrame:CreateTexture(nil, "ARTWORK")
-			prevIcon:SetPoint("CENTER", battleFrame, "TOPLEFT", 400, -172)
+			prevIcon:SetPoint("CENTER", battleFrame, "TOPLEFT", 400, -182)
 			prevIcon:SetTexture(partyTexture)
 			prevIcon:SetSize(30,30)
 			prevIcon:SetVertexColor(0.78, 0.61, 0.43, 1)
@@ -145,86 +145,67 @@
 
 			do
 
-				-- Function to setup center map on player
-				local function SetBattleCenterOnMapFunc()
+				local cTime = -1
 
-					local cTime = -1
-
-					-- Function to update map
-					local function cUpdate(self, elapsed)
-						if cTime > 2 or cTime == -1 then
-							if IsMouseButtonDown("LeftButton") and BattlefieldMapFrame.ScrollContainer:IsMouseOver() then return end
-							local position = C_Map.GetPlayerMapPosition(BattlefieldMapFrame.mapID, "player")
-							if position then
-								local x, y = position.x, position.y
-								if x then
-									local minX, maxX, minY, maxY = BattlefieldMapFrame.ScrollContainer:CalculateScrollExtentsAtScale(BattlefieldMapFrame.ScrollContainer:GetCanvasScale())
-									local cx = Clamp(x, minX, maxX)
-									local cy = Clamp(y, minY, maxY)
-									BattlefieldMapFrame.ScrollContainer:SetPanTarget(cx, cy)
-								end
-								cTime = 0
+				-- Function to update map
+				local function cUpdate(self, elapsed)
+					if cTime > 2 or cTime == -1 then
+						if IsMouseButtonDown("LeftButton") and BattlefieldMapFrame.ScrollContainer:IsMouseOver() then return end
+						local position = C_Map.GetPlayerMapPosition(BattlefieldMapFrame.mapID, "player")
+						if position then
+							local x, y = position.x, position.y
+							if x then
+								local minX, maxX, minY, maxY = BattlefieldMapFrame.ScrollContainer:CalculateScrollExtentsAtScale(BattlefieldMapFrame.ScrollContainer:GetCanvasScale())
+								local cx = Clamp(x, minX, maxX)
+								local cy = Clamp(y, minY, maxY)
+								BattlefieldMapFrame.ScrollContainer:SetPanTarget(cx, cy)
 							end
-						end
-						cTime = cTime + elapsed
-					end
-
-					-- Create frame for update
-					local cFrame = CreateFrame("FRAME", nil, BattlefieldMapFrame)
-
-					-- Function to set update state
-					local function SetUpdateFunc()
-						cTime = -1
-						if LeaMapsLC["BattleCenterOnPlayer"] == "On" then
-							cFrame:SetScript("OnUpdate", cUpdate)
-						else
-							cFrame:SetScript("OnUpdate", nil)
+							cTime = 0
 						end
 					end
+					cTime = cTime + elapsed
+				end
 
-					-- Set update state when option is clicked and on startup
-					LeaMapsCB["BattleCenterOnPlayer"]:HookScript("OnClick", SetUpdateFunc)
+				-- Create frame for update
+				local cFrame = CreateFrame("FRAME", nil, BattlefieldMapFrame)
+
+				-- Function to set update state
+				local function SetUpdateFunc()
+					cTime = -1
+					if LeaMapsLC["BattleCenterOnPlayer"] == "On" then
+						cFrame:SetScript("OnUpdate", cUpdate)
+					else
+						cFrame:SetScript("OnUpdate", nil)
+					end
+				end
+
+				-- Set update state when option is clicked and on startup
+				LeaMapsCB["BattleCenterOnPlayer"]:HookScript("OnClick", SetUpdateFunc)
+				SetUpdateFunc()
+
+				-- Hook reset button click
+				battleFrame.r:HookScript("OnClick", function()
+					LeaMapsLC["BattleCenterOnPlayer"] = "Off"
 					SetUpdateFunc()
+					battleFrame:Hide(); battleFrame:Show()
+				end)
 
-					-- Hook reset button click
-					battleFrame.r:HookScript("OnClick", function()
-						LeaMapsLC["BattleCenterOnPlayer"] = "Off"
+				-- Hook configuration panel for preset profile
+				LeaMapsCB["EnhanceBattleMapBtn"]:HookScript("OnClick", function()
+					if IsShiftKeyDown() and IsControlKeyDown() then
+						-- Preset profile
+						LeaMapsLC["BattleCenterOnPlayer"] = "On"
 						SetUpdateFunc()
-						battleFrame:Hide(); battleFrame:Show()
-					end)
+						if battleFrame:IsShown() then battleFrame:Hide(); battleFrame:Show(); end
+					end
+				end)
 
-					-- Hook configuration panel for preset profile
-					LeaMapsCB["EnhanceBattleMapBtn"]:HookScript("OnClick", function()
-						if IsShiftKeyDown() and IsControlKeyDown() then
-							-- Preset profile
-							LeaMapsLC["BattleCenterOnPlayer"] = "On"
-							SetUpdateFunc()
-							if battleFrame:IsShown() then battleFrame:Hide(); battleFrame:Show(); end
-						end
-					end)
-
-					-- Update location immediately when map is shown
-					BattlefieldMapFrame:HookScript("OnShow", function()
-						if LeaMapsLC["BattleCenterOnPlayer"] == "On" then
-							cTime = -1
-						end
-					end)
-
-				end
-
-				-- Run function when battlefield map is loaded
-				if IsAddOnLoaded("Blizzard_BattlefieldMap") then
-					SetBattleCenterOnMapFunc()
-				else
-					local waitFrame = CreateFrame("FRAME")
-					waitFrame:RegisterEvent("ADDON_LOADED")
-					waitFrame:SetScript("OnEvent", function(self, event, arg1)
-						if arg1 == "Blizzard_BattlefieldMap" then
-							SetBattleCenterOnMapFunc()
-							waitFrame:UnregisterAllEvents()
-						end
-					end)
-				end
+				-- Update location immediately when map is shown
+				BattlefieldMapFrame:HookScript("OnShow", function()
+					if LeaMapsLC["BattleCenterOnPlayer"] == "On" then
+						cTime = -1
+					end
+				end)
 
 			end
 
@@ -263,12 +244,10 @@
 
 			-- Function to set player arrow size
 			local function SetPlayerArrow()
-				if IsAddOnLoaded("Blizzard_BattlefieldMap") then 
-					for pin in BattlefieldMapFrame:EnumerateAllPins() do
-						if pin.UpdateAppearanceData then
-							BattlefieldMapFrame.groupMembersDataProvider:SetUnitPinSize("player", LeaMapsLC["BattlePlayerArrowSize"])
-							pin:SynchronizePinSizes()
-						end
+				for pin in BattlefieldMapFrame:EnumerateAllPins() do
+					if pin.UpdateAppearanceData then
+						BattlefieldMapFrame.groupMembersDataProvider:SetUnitPinSize("player", LeaMapsLC["BattlePlayerArrowSize"])
+						pin:SynchronizePinSizes()
 					end
 				end
 			end
