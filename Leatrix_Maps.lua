@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.03.alpha.2 (13th October 2021)
+	-- 	Leatrix Maps 1.14.03.alpha.3 (14th October 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.03.alpha.2"
+	LeaMapsLC["AddonVer"] = "1.14.03.alpha.3"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -37,6 +37,11 @@
 	-- Main function
 	function LeaMapsLC:MainFunc()
 
+		-- Load Battlefield addon
+		if not IsAddOnLoaded("Blizzard_BattlefieldMap") then
+			RunScript('UIParentLoadAddOn("Blizzard_BattlefieldMap")')
+		end
+
 		-- Get player faction
 		local playerFaction = UnitFactionGroup("player")
 
@@ -49,11 +54,6 @@
 		----------------------------------------------------------------------
 
 		if LeaMapsLC["EnhanceBattleMap"] == "On" then
-
-			-- Load Battlefield addon
-			if not IsAddOnLoaded("Blizzard_BattlefieldMap") then
-				RunScript('UIParentLoadAddOn("Blizzard_BattlefieldMap")')
-			end
 
 			-- Show teammates
 			RunScript('BattlefieldMapOptions.showPlayers = true')
@@ -1753,13 +1753,14 @@
 		end
 
 		----------------------------------------------------------------------
-		-- Reveal unexplored areas
+		-- Show unexplored areas
 		----------------------------------------------------------------------
 
-		do
+		if LeaMapsLC["RevealMap"] == "On" then
 
 			-- Create table to store revealed overlays
 			local overlayTextures = {}
+			local bfoverlayTextures = {}
 
 			-- Function to refresh overlays (Blizzard_SharedMapDataProviders\MapExplorationDataProvider)
 			local function MapExplorationPin_RefreshOverlays(pin, fullUpdate)
@@ -1859,18 +1860,91 @@
 				pin.overlayTexturePool.resetterFunc = TexturePool_ResetVertexColor
 			end
 
-			-- Toggle overlays if reveal option is clicked
-			LeaMapsCB["RevealMap"]:HookScript("OnClick", function()
-				if LeaMapsLC["RevealMap"] == "On" then 
-					for i = 1, #overlayTextures  do
-						overlayTextures[i]:Show()
+			-- Repeat refresh overlays function for Battlefield map
+			local function bfMapExplorationPin_RefreshOverlays(pin, fullUpdate)
+				bfoverlayTextures = {}
+				local mapID = BattlefieldMapFrame.mapID; if not mapID then return end
+				local artID = C_Map.GetMapArtID(mapID); if not artID or not Leatrix_Maps["Reveal"][artID] then return end
+				local LeaMapsZone = Leatrix_Maps["Reveal"][artID]
+
+				-- Store already explored tiles in a table so they can be ignored
+				local TileExists = {}
+				local exploredMapTextures = C_MapExplorationInfo.GetExploredMapTextures(mapID)
+				if exploredMapTextures then
+					for i, exploredTextureInfo in ipairs(exploredMapTextures) do
+						local key = exploredTextureInfo.textureWidth .. ":" .. exploredTextureInfo.textureHeight .. ":" .. exploredTextureInfo.offsetX .. ":" .. exploredTextureInfo.offsetY
+						TileExists[key] = true
 					end
-				else
-					for i = 1, #overlayTextures  do
-						overlayTextures[i]:Hide()
-					end	
 				end
-			end)
+
+				-- Get the sizes
+				pin.layerIndex = pin:GetMap():GetCanvasContainer():GetCurrentLayerIndex()
+				local layers = C_Map.GetMapArtLayers(mapID)
+				local layerInfo = layers and layers[pin.layerIndex]
+				if not layerInfo then return end
+				local TILE_SIZE_WIDTH = layerInfo.tileWidth
+				local TILE_SIZE_HEIGHT = layerInfo.tileHeight
+
+				-- Show textures if they are in database and have not been explored
+				for key, files in pairs(LeaMapsZone) do
+					if not TileExists[key] then
+						local width, height, offsetX, offsetY = strsplit(":", key)
+						local fileDataIDs = { strsplit(",", files) }
+						local numTexturesWide = ceil(width/TILE_SIZE_WIDTH)
+						local numTexturesTall = ceil(height/TILE_SIZE_HEIGHT)
+						local texturePixelWidth, textureFileWidth, texturePixelHeight, textureFileHeight
+						for j = 1, numTexturesTall do
+							if ( j < numTexturesTall ) then
+								texturePixelHeight = TILE_SIZE_HEIGHT
+								textureFileHeight = TILE_SIZE_HEIGHT
+							else
+								texturePixelHeight = mod(height, TILE_SIZE_HEIGHT)
+								if ( texturePixelHeight == 0 ) then
+									texturePixelHeight = TILE_SIZE_HEIGHT
+								end
+								textureFileHeight = 16
+								while(textureFileHeight < texturePixelHeight) do
+									textureFileHeight = textureFileHeight * 2
+								end
+							end
+							for k = 1, numTexturesWide do
+								local texture = pin.overlayTexturePool:Acquire()
+								if ( k < numTexturesWide ) then
+									texturePixelWidth = TILE_SIZE_WIDTH
+									textureFileWidth = TILE_SIZE_WIDTH
+								else
+									texturePixelWidth = mod(width, TILE_SIZE_WIDTH)
+									if ( texturePixelWidth == 0 ) then
+										texturePixelWidth = TILE_SIZE_WIDTH
+									end
+									textureFileWidth = 16
+									while(textureFileWidth < texturePixelWidth) do
+										textureFileWidth = textureFileWidth * 2
+									end
+								end
+								texture:SetSize(texturePixelWidth, texturePixelHeight)
+								texture:SetTexCoord(0, texturePixelWidth/textureFileWidth, 0, texturePixelHeight/textureFileHeight)
+								texture:SetPoint("TOPLEFT", offsetX + (TILE_SIZE_WIDTH * (k-1)), -(offsetY + (TILE_SIZE_HEIGHT * (j - 1))))
+								texture:SetTexture(tonumber(fileDataIDs[((j - 1) * numTexturesWide) + k]), nil, nil, "TRILINEAR")
+								texture:SetDrawLayer("ARTWORK", -1)
+								texture:Show()
+								if fullUpdate then
+									pin.textureLoadGroup:AddTexture(texture)
+								end
+								if LeaMapsLC["RevTint"] == "On" then
+									texture:SetVertexColor(LeaMapsLC["tintRed"], LeaMapsLC["tintGreen"], LeaMapsLC["tintBlue"], LeaMapsLC["tintAlpha"])
+								end
+								tinsert(bfoverlayTextures, texture)
+							end
+						end
+					end
+				end
+			end
+
+			for pin in BattlefieldMapFrame:EnumeratePinsByTemplate("MapExplorationPinTemplate") do
+				hooksecurefunc(pin, "RefreshOverlays", bfMapExplorationPin_RefreshOverlays)
+				pin.overlayTexturePool.resetterFunc = TexturePool_ResetVertexColor
+			end
 
 			-- Create tint frame
 			local tintFrame = LeaMapsLC:CreatePanel("Show unexplored areas", "tintFrame")
@@ -1900,8 +1974,11 @@
 				-- Set tint
 				if LeaMapsLC["RevTint"] == "On" then
 					-- Enable tint
-					for i = 1, #overlayTextures  do
+					for i = 1, #overlayTextures do
 						overlayTextures[i]:SetVertexColor(LeaMapsLC["tintRed"], LeaMapsLC["tintGreen"], LeaMapsLC["tintBlue"], LeaMapsLC["tintAlpha"])
+					end
+					for i = 1, #bfoverlayTextures do
+						bfoverlayTextures[i]:SetVertexColor(LeaMapsLC["tintRed"], LeaMapsLC["tintGreen"], LeaMapsLC["tintBlue"], LeaMapsLC["tintAlpha"])
 					end
 					-- Enable controls
 					LeaMapsCB["tintRed"]:Enable(); LeaMapsCB["tintRed"]:SetAlpha(1.0)
@@ -1911,9 +1988,13 @@
 					prvTitle:SetAlpha(1.0); tintFrame.preview:SetAlpha(1.0)
 				else
 					-- Disable tint
-					for i = 1, #overlayTextures  do
+					for i = 1, #overlayTextures do
 						overlayTextures[i]:SetVertexColor(1, 1, 1)
 						overlayTextures[i]:SetAlpha(1.0)
+					end
+					for i = 1, #bfoverlayTextures do
+						bfoverlayTextures[i]:SetVertexColor(1, 1, 1)
+						bfoverlayTextures[i]:SetAlpha(1.0)
 					end
 					-- Disable controls
 					LeaMapsCB["tintRed"]:Disable(); LeaMapsCB["tintRed"]:SetAlpha(0.3)
@@ -2412,7 +2493,7 @@
 
 	-- Set lock state for configuration buttons
 	function LeaMapsLC:SetDim()
-		LeaMapsLC:LockOption("RevealMap", "RevTintBtn", false) -- Reveal map
+		LeaMapsLC:LockOption("RevealMap", "RevTintBtn", true) -- Reveal map
 		LeaMapsLC:LockOption("EnlargePlayerArrow", "EnlargePlayerArrowBtn", false) -- Enlarge player arrow
 		LeaMapsLC:LockOption("UseClassIcons", "UseClassIconsBtn", true) -- Class colored icons
 		LeaMapsLC:LockOption("SetMapOpacity", "SetMapOpacityBtn", false) -- Set map opacity
@@ -2463,6 +2544,7 @@
 		or	(LeaMapsLC["StickyMapFrame"] ~= LeaMapsDB["StickyMapFrame"])		-- Sticky map frame
 		or	(LeaMapsLC["AutoChangeZones"] ~= LeaMapsDB["AutoChangeZones"])		-- Auto change zones
 		or	(LeaMapsLC["UseDefaultMap"] ~= LeaMapsDB["UseDefaultMap"])			-- Use default map
+		or	(LeaMapsLC["RevealMap"] ~= LeaMapsDB["RevealMap"])					-- Show unexplored areas
 		or	(LeaMapsLC["HideTownCityIcons"] ~= LeaMapsDB["HideTownCityIcons"])	-- Hide town and city icons
 		or	(LeaMapsLC["EnhanceBattleMap"] ~= LeaMapsDB["EnhanceBattleMap"])	-- Enhance battlefield map
 		then
@@ -3104,7 +3186,7 @@
 	LeaMapsLC:MakeCB(PageF, "UseDefaultMap", "Use default map", 16, -272, true, "If checked, the default fullscreen map will be used.|n|nNote that enabling this option will lock out some of the other options.")
 
 	LeaMapsLC:MakeTx(PageF, "Elements", 225, -72)
-	LeaMapsLC:MakeCB(PageF, "RevealMap", "Show unexplored areas", 225, -92, false, "If checked, unexplored areas of the map will be shown.")
+	LeaMapsLC:MakeCB(PageF, "RevealMap", "Show unexplored areas", 225, -92, true, "If checked, unexplored areas of the map will be shown on the world map and the battlefield map.")
 	LeaMapsLC:MakeCB(PageF, "ShowPointsOfInterest", "Show points of interest", 225, -112, false, "If checked, points of interest will be shown.")
 	LeaMapsLC:MakeCB(PageF, "ShowZoneLevels", "Show zone levels", 225, -132, false, "If checked, zone, dungeon and fishing skill levels will be shown.")
 	LeaMapsLC:MakeCB(PageF, "ShowCoords", "Show coordinates", 225, -152, false, "If checked, coordinates will be shown.")
