@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.03.alpha.4 (16th October 2021)
+	-- 	Leatrix Maps 1.14.03.alpha.5 (16th October 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.03.alpha.4"
+	LeaMapsLC["AddonVer"] = "1.14.03.alpha.5"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -1692,10 +1692,10 @@
 
 							-- Get POI if any quest requirements have been met
 							if LeaMapsLC["ShowDungeonIcons"] == "On" and (pinInfo[1] == "Dungeon" or pinInfo[1] == "Raid" or pinInfo[1] == "Dunraid")
-							or LeaMapsLC["ShowFlightPoints"] == "On" and playerFaction == "Alliance" and (pinInfo[1] == "FlightA" or pinInfo[1] == "FlightN")
-							or LeaMapsLC["ShowFlightPoints"] == "On" and playerFaction == "Horde" and (pinInfo[1] == "FlightH" or pinInfo[1] == "FlightN")
-							or LeaMapsLC["ShowTravelPoints"] == "On" and playerFaction == "Alliance" and (pinInfo[1] == "TravelA" or pinInfo[1] == "TravelN")
-							or LeaMapsLC["ShowTravelPoints"] == "On" and playerFaction == "Horde" and (pinInfo[1] == "TravelH" or pinInfo[1] == "TravelN")
+							or LeaMapsLC["ShowTravelPoints"] == "On" and playerFaction == "Alliance" and (pinInfo[1] == "FlightA" or pinInfo[1] == "FlightN" or pinInfo[1] == "TravelA" or pinInfo[1] == "TravelN")
+							or LeaMapsLC["ShowTravelPoints"] == "On" and playerFaction == "Horde" and (pinInfo[1] == "FlightH" or pinInfo[1] == "FlightN" or pinInfo[1] == "TravelH" or pinInfo[1] == "TravelN")
+							or LeaMapsLC["ShowTravelOpposing"] == "On" and playerFaction == "Alliance" and (pinInfo[1] == "FlightH" or pinInfo[1] == "FlightN" or pinInfo[1] == "TravelH" or pinInfo[1] == "TravelN")
+							or LeaMapsLC["ShowTravelOpposing"] == "On" and playerFaction == "Horde" and (pinInfo[1] == "FlightA" or pinInfo[1] == "FlightN" or pinInfo[1] == "TravelA" or pinInfo[1] == "TravelN")
 							or LeaMapsLC["ShowSpiritHealers"] == "On" and (pinInfo[1] == "Spirit")
 							then
 								local myPOI = {}
@@ -1787,8 +1787,8 @@
 			-- Add controls
 			LeaMapsLC:MakeTx(poiFrame, "Settings", 16, -72)
 			LeaMapsLC:MakeCB(poiFrame, "ShowDungeonIcons", "Show dungeons and raids", 16, -92, false, "If checked, dungeons and raids will be shown.")
-			LeaMapsLC:MakeCB(poiFrame, "ShowFlightPoints", "Show flight points", 16, -112, false, "If checked, flight points will be shown.")
-			LeaMapsLC:MakeCB(poiFrame, "ShowTravelPoints", "Show boats, zeppelins and trams", 16, -132, false, "If checked, boat harbors, zeppelin towers and tram stations will be shown.")
+			LeaMapsLC:MakeCB(poiFrame, "ShowTravelPoints", "Show travel points for same faction", 16, -112, false, "If checked, travel points for the same faction will be shown.|n|nThis includes flight points, boat harbors, zeppelin towers and tram stations.")
+			LeaMapsLC:MakeCB(poiFrame, "ShowTravelOpposing", "Show travel points for opposing faction", 16, -132, false, "If checked, travel points for the opposing faction will be shown.|n|nThis includes flight points, boat harbors, zeppelin towers and tram stations.")
 			LeaMapsLC:MakeCB(poiFrame, "ShowSpiritHealers", "Show spirit healers", 16, -152, false, "If checked, spirit healers will be shown.")
 
 			-- Function to refresh points of interest
@@ -1799,8 +1799,8 @@
 			-- Set points of interest when options are clicked (including show zone levels)
 			LeaMapsCB["ShowPointsOfInterest"]:HookScript("OnClick", SetPointsOfInterest)
 			LeaMapsCB["ShowDungeonIcons"]:HookScript("OnClick", SetPointsOfInterest)
-			LeaMapsCB["ShowFlightPoints"]:HookScript("OnClick", SetPointsOfInterest)
 			LeaMapsCB["ShowTravelPoints"]:HookScript("OnClick", SetPointsOfInterest)
+			LeaMapsCB["ShowTravelOpposing"]:HookScript("OnClick", SetPointsOfInterest)
 			LeaMapsCB["ShowSpiritHealers"]:HookScript("OnClick", SetPointsOfInterest)
 			LeaMapsCB["ShowZoneLevels"]:HookScript("OnClick", SetPointsOfInterest)
 
@@ -1813,8 +1813,8 @@
 			-- Reset button click
 			poiFrame.r:HookScript("OnClick", function()
 				LeaMapsLC["ShowDungeonIcons"] = "On"
-				LeaMapsLC["ShowFlightPoints"] = "On"
 				LeaMapsLC["ShowTravelPoints"] = "On"
+				LeaMapsLC["ShowTravelOpposing"] = "Off"
 				LeaMapsLC["ShowSpiritHealers"] = "On"
 				SetPointsOfInterest()
 				poiFrame:Hide(); poiFrame:Show()
@@ -1825,8 +1825,8 @@
 				if IsShiftKeyDown() and IsControlKeyDown() then
 					-- Preset profile
 					LeaMapsLC["ShowDungeonIcons"] = "On"
-					LeaMapsLC["ShowFlightPoints"] = "On"
 					LeaMapsLC["ShowTravelPoints"] = "On"
+					LeaMapsLC["ShowTravelOpposing"] = "Off"
 					LeaMapsLC["ShowSpiritHealers"] = "On"
 					SetPointsOfInterest()
 					if poiFrame:IsShown() then poiFrame:Hide(); poiFrame:Show(); end
@@ -2958,8 +2958,8 @@
 				LeaMapsDB["tintAlpha"] = 1.0
 				LeaMapsDB["ShowPointsOfInterest"] = "On"
 				LeaMapsDB["ShowDungeonIcons"] = "On"
-				LeaMapsDB["ShowFlightPoints"] = "On"
 				LeaMapsDB["ShowTravelPoints"] = "On"
+				LeaMapsDB["ShowTravelOpposing"] = "Off"
 				LeaMapsDB["ShowSpiritHealers"] = "On"
 				LeaMapsDB["ShowZoneLevels"] = "On"
 				LeaMapsDB["ShowFishingLevels"] = "On"
@@ -3065,8 +3065,8 @@
 			LeaMapsLC:LoadVarNum("tintAlpha", 1, 0, 1)					-- Tint opacity
 			LeaMapsLC:LoadVarChk("ShowPointsOfInterest", "On")			-- Show points of interest
 			LeaMapsLC:LoadVarChk("ShowDungeonIcons", "On")				-- Show dungeons and raids
-			LeaMapsLC:LoadVarChk("ShowFlightPoints", "On")				-- Show flight points
-			LeaMapsLC:LoadVarChk("ShowTravelPoints", "On")				-- Show boats, zeppelins and trams
+			LeaMapsLC:LoadVarChk("ShowTravelPoints", "On")				-- Show travel points for same faction
+			LeaMapsLC:LoadVarChk("ShowTravelOpposing", "Off")			-- Show travel points for opposing faction
 			LeaMapsLC:LoadVarChk("ShowSpiritHealers", "On")				-- Show spirit healers
 			LeaMapsLC:LoadVarChk("ShowZoneLevels", "On")				-- Show zone levels
 			LeaMapsLC:LoadVarChk("ShowFishingLevels", "On")				-- Show fishing levels
@@ -3138,8 +3138,8 @@
 			LeaMapsDB["tintAlpha"] = LeaMapsLC["tintAlpha"]
 			LeaMapsDB["ShowPointsOfInterest"] = LeaMapsLC["ShowPointsOfInterest"]
 			LeaMapsDB["ShowDungeonIcons"] = LeaMapsLC["ShowDungeonIcons"]
-			LeaMapsDB["ShowFlightPoints"] = LeaMapsLC["ShowFlightPoints"]
 			LeaMapsDB["ShowTravelPoints"] = LeaMapsLC["ShowTravelPoints"]
+			LeaMapsDB["ShowTravelOpposing"] = LeaMapsLC["ShowTravelOpposing"]
 			LeaMapsDB["ShowSpiritHealers"] = LeaMapsLC["ShowSpiritHealers"]
 			LeaMapsDB["ShowZoneLevels"] = LeaMapsLC["ShowZoneLevels"]
 			LeaMapsDB["ShowFishingLevels"] = LeaMapsLC["ShowFishingLevels"]
