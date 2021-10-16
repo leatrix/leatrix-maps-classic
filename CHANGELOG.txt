@@ -1,6 +1,7 @@
-1.14.03.alpha.2 - 13th October 2021
+1.14.03.alpha.4 - 16th October 2021
 - Added a new setting to 'Enhance battlefield map' which lets you keep the battleifeld map centered on you.
 - The 'Show unexplored areas' option will now reveal unexplored areas on the battlefield map as well as the world map.  Toggling the option now requires a UI reload.
+- If 'Unlock battlefield map' is enabled, you can drag the bottom-right corner of the battlefield map to resize it (this is in addition to the 'Map Size' slider).
 
 1.14.02 - 13th October 2021
 - Added a new option 'Center map on player'.  If enabled, the map will remain centered on you as long as you are not dragging the map or in a dungeon.  No reload required so you can enable it as and when you wish.
