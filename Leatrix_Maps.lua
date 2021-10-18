@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.03.alpha.6 (18th October 2021)
+	-- 	Leatrix Maps 1.14.03.alpha.7 (18th October 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.03.alpha.6"
+	LeaMapsLC["AddonVer"] = "1.14.03.alpha.7"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -644,6 +644,44 @@
 				return x/s, y/s
 			end
 
+			-- Create configuraton panel
+			local UnlockMapPanel = LeaMapsLC:CreatePanel("Unlock map frame", "UnlockMapPanel")
+
+			-- Add controls
+			LeaMapsLC:MakeTx(UnlockMapPanel, "Settings", 16, -72)
+			LeaMapsLC:MakeSL(UnlockMapPanel, "MapScale", "Map Scale", "Drag to set the world map scale.|n|nYou can also rescale the world map by dragging the bottom-right corner.", 0.2, 3, 0.001, 16, -112, "%.1f")
+
+			LeaMapsCB["MapScale"]:HookScript("OnValueChanged", function()
+				WorldMapFrame:SetScale(LeaMapsLC["MapScale"])
+				LeaMapsCB["MapScale"].f:SetText(string.format("%.1f%%", LeaMapsLC["MapScale"] / 1 * 100))
+			end)
+
+			-- Back to Main Menu button click
+			UnlockMapPanel.b:HookScript("OnClick", function()
+				UnlockMapPanel:Hide()
+				LeaMapsLC["PageF"]:Show()
+			end)
+
+			-- Reset button click
+			UnlockMapPanel.r:HookScript("OnClick", function()
+				LeaMapsCB["resetMapPosBtn"]:Click()
+				UnlockMapPanel:Hide(); UnlockMapPanel:Show()
+			end)
+
+			-- Show configuration panel when configuration button is clicked
+			LeaMapsCB["UnlockMapFrameBtn"]:HookScript("OnClick", function()
+				if IsShiftKeyDown() and IsControlKeyDown() then
+					-- Preset profile
+					LeaMapsLC["MapScale"] = 0.9
+					WorldMapFrame:SetScale(LeaMapsLC["MapScale"])
+					if UnlockMapPanel:IsShown() then UnlockMapPanel:Hide(); UnlockMapPanel:Show(); end
+				else
+					UnlockMapPanel:Show()
+					LeaMapsLC["PageF"]:Hide()
+				end
+			end)
+
+			-- Scale handle
 			local moveDistance, mapX, mapY, mapLeft, mapTop, mapNormalScale, mapEffectiveScale = 0, 0, 0, 0, 0, 1
 
 			-- Function to get movement distance
@@ -702,6 +740,8 @@
 					local y = mapY * s
 					WorldMapFrame:ClearAllPoints()
 					WorldMapFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", x, y)
+					LeaMapsLC["MapScale"] = WorldMapFrame:GetScale()
+					LeaMapsCB["MapScale"]:Hide(); LeaMapsCB["MapScale"]:Show()
 				end)
 				frame:SetAllPoints(UIParent)
 			end)
@@ -2582,6 +2622,7 @@
 		LeaMapsLC:LockOption("RevealMap", "RevTintBtn", true) -- Reveal map
 		LeaMapsLC:LockOption("EnlargePlayerArrow", "EnlargePlayerArrowBtn", false) -- Enlarge player arrow
 		LeaMapsLC:LockOption("UseClassIcons", "UseClassIconsBtn", true) -- Class colored icons
+		LeaMapsLC:LockOption("UnlockMapFrame", "UnlockMapFrameBtn", false) -- Unlock map frame
 		LeaMapsLC:LockOption("SetMapOpacity", "SetMapOpacityBtn", false) -- Set map opacity
 		LeaMapsLC:LockOption("ShowPointsOfInterest", "ShowPointsOfInterestBtn", false) -- Show points of interest
 		LeaMapsLC:LockOption("ShowZoneLevels", "ShowZoneLevelsBtn", false) -- Show zone levels
@@ -3285,6 +3326,7 @@
  	LeaMapsLC:CfgBtn("RevTintBtn", LeaMapsCB["RevealMap"])
  	LeaMapsLC:CfgBtn("EnlargePlayerArrowBtn", LeaMapsCB["EnlargePlayerArrow"])
  	LeaMapsLC:CfgBtn("UseClassIconsBtn", LeaMapsCB["UseClassIcons"])
+ 	LeaMapsLC:CfgBtn("UnlockMapFrameBtn", LeaMapsCB["UnlockMapFrame"])
  	LeaMapsLC:CfgBtn("SetMapOpacityBtn", LeaMapsCB["SetMapOpacity"])
  	LeaMapsLC:CfgBtn("ShowPointsOfInterestBtn", LeaMapsCB["ShowPointsOfInterest"])
  	LeaMapsLC:CfgBtn("ShowZoneLevelsBtn", LeaMapsCB["ShowZoneLevels"])
