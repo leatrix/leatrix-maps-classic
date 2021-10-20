@@ -1,4 +1,4 @@
-1.14.03.alpha.7 - 18th October 2021
+1.14.03 - 21st October 2021
 - The 'Show flight points' and 'Show travel points' options (in the 'Show points of interest' configuration panel) are now combined into 'Show travel points for same faction' and 'Show travel points for opposing faction'.
 - Added a new setting to 'Enhance battlefield map' which lets you keep the battleifeld map centered on you.
 - The 'Show unexplored areas' option will now reveal unexplored areas on the battlefield map as well as the world map.  Toggling the option now requires a UI reload.
