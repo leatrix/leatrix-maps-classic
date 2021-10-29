@@ -1,3 +1,6 @@
+1.14.05 - 29th October 2021
+- Replaced packager to fix CurseForge App issue.
+
 1.14.04 - 28th October 2021
 - Fixed a few locale issues with invalid translations.
 
