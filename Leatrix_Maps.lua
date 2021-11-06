@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.06.alpha.1 (30th October 2021)
+	-- 	Leatrix Maps 1.14.06.alpha.2 (6th November 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -9,10 +9,10 @@
 	_G.LeaMapsDB = _G.LeaMapsDB or {}
 
 	-- Create local tables
-	local LeaMapsLC, LeaMapsCB, LeaConfigList = {}, {}, {}
+	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.06.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.14.06.alpha.2"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -44,6 +44,10 @@
 
 		-- Get player faction
 		local playerFaction = UnitFactionGroup("player")
+
+		-- Hide world map dropdown menus to prevent GuildControlSetRank() taint
+		WorldMapZoneDropDown:Hide()
+		WorldMapContinentDropDown:Hide()
 
 		-- Hide right-click to zoom out button and message
 		WorldMapZoomOutButton:Hide()
@@ -2504,6 +2508,47 @@
 		end
 
 		----------------------------------------------------------------------
+		-- Add zone map dropdown to main panel (Season of Mastery only)
+		----------------------------------------------------------------------
+
+		if WorldMapZoneMinimapDropDown then
+
+			-- Hide zone map dropdown menu as it's shown in the main panel
+			WorldMapZoneMinimapDropDown:Hide()
+
+			-- Create dropdown menu
+			LeaMapsLC:CreateDropDown("ZoneMapMenu", "Zone Map", LeaMapsLC["PageF"], 146, "TOPLEFT", 16, -382, {"Never", "Battlegrounds", "Always"}, "Choose where the zone map should be shown.")
+
+			-- Set zone map visibility
+			local function SetZoneMapStyle()
+				-- Get dropdown menu value
+				local zoneMapSetting = LeaMapsLC["ZoneMapMenu"] -- Numeric value
+				-- Set chain style according to value
+				SetCVar("showBattlefieldMinimap", zoneMapSetting - 1)
+				-- From WorldMapZoneMinimapDropDown_OnClick in Blizzard_WorldMap
+				_G.SHOW_BATTLEFIELD_MINIMAP = zoneMapSetting - 1
+				if (DoesInstanceTypeMatchBattlefieldMapSettings()) then
+					if (not BattlefieldMapFrame) then
+						BattlefieldMap_LoadUI()
+					end
+					BattlefieldMapFrame:Show()
+				else
+					if (BattlefieldMapFrame) then
+						BattlefieldMapFrame:Hide()
+					end
+				end
+			end
+
+			-- Set style on startup
+			SetZoneMapStyle()
+
+			-- Set style when a drop menu is selected (procs when the list is hidden)
+			LeaMapsCB["ListFrameZoneMapMenu"]:HookScript("OnHide", SetZoneMapStyle)
+			LeaMapsCB["ListFrameZoneMapMenu"]:SetFrameLevel(30)
+
+		end
+
+		----------------------------------------------------------------------
 		-- Final code
 		----------------------------------------------------------------------
 
@@ -2797,6 +2842,112 @@
 		mbtn:HookScript("OnMouseUp", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
 
 		return mbtn
+	end
+
+	-- Create a dropdown menu (using custom function to avoid taint)
+	function LeaMapsLC:CreateDropDown(ddname, label, parent, width, anchor, x, y, items, tip)
+
+		-- Add the dropdown name to a table
+		tinsert(LeaDropList, ddname)
+
+		-- Populate variable with item list
+		LeaMapsLC[ddname.."Table"] = items
+
+		-- Create outer frame
+		local frame = CreateFrame("FRAME", nil, parent); frame:SetWidth(width); frame:SetHeight(42); frame:SetPoint("BOTTOMLEFT", parent, anchor, x, y);
+
+		-- Create dropdown inside outer frame
+		local dd = CreateFrame("Frame", nil, frame); dd:SetPoint("BOTTOMLEFT", -16, -8); dd:SetPoint("BOTTOMRIGHT", 15, -4); dd:SetHeight(32);
+
+		-- Create dropdown textures
+		local lt = dd:CreateTexture(nil, "ARTWORK"); lt:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame"); lt:SetTexCoord(0, 0.1953125, 0, 1); lt:SetPoint("TOPLEFT", dd, 0, 17); lt:SetWidth(25); lt:SetHeight(64); 
+		local rt = dd:CreateTexture(nil, "BORDER"); rt:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame"); rt:SetTexCoord(0.8046875, 1, 0, 1); rt:SetPoint("TOPRIGHT", dd, 0, 17); rt:SetWidth(25); rt:SetHeight(64); 
+		local mt = dd:CreateTexture(nil, "BORDER"); mt:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame"); mt:SetTexCoord(0.1953125, 0.8046875, 0, 1); mt:SetPoint("LEFT", lt, "RIGHT"); mt:SetPoint("RIGHT", rt, "LEFT"); mt:SetHeight(64);
+
+		-- Create dropdown label
+		local lf = dd:CreateFontString(nil, "OVERLAY", "GameFontNormal"); lf:SetPoint("TOPLEFT", frame, 0, 0); lf:SetPoint("TOPRIGHT", frame, -5, 0); lf:SetJustifyH("LEFT"); lf:SetText(L[label])
+	
+		-- Create dropdown placeholder for value (set it using OnShow)
+		local value = dd:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+		value:SetPoint("LEFT", lt, 26, 2); value:SetPoint("RIGHT", rt, -43, 0); value:SetJustifyH("LEFT")
+		dd:SetScript("OnShow", function() value:SetText(LeaMapsLC[ddname.."Table"][LeaMapsLC[ddname]]) end)
+
+		-- Create dropdown button (clicking it opens the dropdown list)
+		local dbtn = CreateFrame("Button", nil, dd)
+		dbtn:SetPoint("TOPRIGHT", rt, -16, -18); dbtn:SetWidth(24); dbtn:SetHeight(24)
+		dbtn:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up"); dbtn:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down"); dbtn:SetDisabledTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Disabled"); dbtn:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight"); dbtn:GetHighlightTexture():SetBlendMode("ADD")
+		dbtn.tiptext = tip; dbtn:SetScript("OnEnter", LeaMapsLC.ShowTooltip)
+		dbtn:SetScript("OnLeave", GameTooltip_Hide)
+
+		-- Create dropdown list
+		local ddlist =  CreateFrame("Frame",nil,frame, "BackdropTemplate")
+		LeaMapsCB["ListFrame"..ddname] = ddlist
+		ddlist:SetPoint("TOP",0,-42)
+		ddlist:SetWidth(frame:GetWidth())
+		ddlist:SetHeight((#items * 17) + 17 + 17)
+		ddlist:SetFrameStrata("FULLSCREEN_DIALOG")
+		ddlist:SetFrameLevel(12)
+		ddlist:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark", edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", tile = false, tileSize = 0, edgeSize = 32, insets = { left = 4, right = 4, top = 4, bottom = 4 }});
+		ddlist:Hide()
+
+		-- Hide list if parent is closed
+		parent:HookScript("OnHide", function() ddlist:Hide() end)
+
+		-- Create checkmark (it marks the currently selected item)
+		local ddlistchk = CreateFrame("FRAME", nil, ddlist)
+		ddlistchk:SetHeight(16); ddlistchk:SetWidth(16)
+		ddlistchk.t = ddlistchk:CreateTexture(nil, "ARTWORK"); ddlistchk.t:SetAllPoints(); ddlistchk.t:SetTexture("Interface\\Common\\UI-DropDownRadioChecks"); ddlistchk.t:SetTexCoord(0, 0.5, 0.5, 1.0);
+
+		-- Create dropdown list items
+		for k, v in pairs(items) do
+
+			local dditem = CreateFrame("Button", nil, LeaMapsCB["ListFrame"..ddname])
+			LeaMapsCB["Drop"..ddname..k] = dditem;
+			dditem:Show();
+			dditem:SetWidth(ddlist:GetWidth()-22)
+			dditem:SetHeight(20)
+			dditem:SetPoint("TOPLEFT", 12, -k*16)
+
+			dditem.f = dditem:CreateFontString(nil, 'ARTWORK', 'GameFontHighlight')
+			dditem.f:SetPoint('LEFT', 16, 0)
+			dditem.f:SetText(items[k])
+
+			dditem.t = dditem:CreateTexture(nil, "BACKGROUND")
+			dditem.t:SetAllPoints()
+			dditem.t:SetColorTexture(0.3, 0.3, 0.00, 0.8)
+			dditem.t:Hide();
+
+			dditem:SetScript("OnEnter", function() dditem.t:Show() end)
+			dditem:SetScript("OnLeave", function() dditem.t:Hide() end)
+			dditem:SetScript("OnClick", function()
+				LeaMapsLC[ddname] = k
+				value:SetText(LeaMapsLC[ddname.."Table"][k])
+				ddlist:Hide(); -- Must be last in click handler as other functions hook it
+			end)
+
+			-- Show list when button is clicked
+			dbtn:SetScript("OnClick", function()
+				-- Show the dropdown
+				if ddlist:IsShown() then ddlist:Hide() else 
+					ddlist:Show();
+					ddlistchk:SetPoint("TOPLEFT",10,select(5,LeaMapsCB["Drop"..ddname..LeaMapsLC[ddname]]:GetPoint()))
+					ddlistchk:Show();
+				end;
+				-- Hide all other dropdowns except the one we're dealing with
+				for void,v in pairs(LeaDropList) do
+					if v ~= ddname then
+						LeaMapsCB["ListFrame"..v]:Hide()
+					end
+				end
+			end)
+
+			-- Expand the clickable area of the button to include the entire menu width
+			dbtn:SetHitRectInsets(-width+28, 0, 0, 0)
+
+		end
+
+		return frame
+		
 	end
 
 	-- Set reload button status
@@ -3157,6 +3308,7 @@
 				LeaMapsDB["BattleMapX"] = -47
 				LeaMapsDB["BattleMapY"] = 83
 
+				LeaMapsDB["ZoneMapMenu"] = 1
 				LeaMapsDB["ShowMinimapIcon"] = "On"
 				LeaMapsDB["minimapPos"] = 204 -- LeaMapsDB
 
@@ -3267,6 +3419,7 @@
 			LeaMapsLC:LoadVarNum("BattleMapX", -47, -5000, 5000)		-- Battlefield map X axis
 			LeaMapsLC:LoadVarNum("BattleMapY", 83, -5000, 5000)			-- Battlefield map Y axis
 
+			LeaMapsLC:LoadVarNum("ZoneMapMenu", 1, 1, 3)				-- Zone map dropdown menu
 			LeaMapsLC:LoadVarChk("ShowMinimapIcon", "On")				-- Show minimap button
 
 			-- Panel
@@ -3343,6 +3496,7 @@
 			LeaMapsDB["BattleMapX"] = LeaMapsLC["BattleMapX"]
 			LeaMapsDB["BattleMapY"] = LeaMapsLC["BattleMapY"]
 
+			LeaMapsDB["ZoneMapMenu"] = LeaMapsLC["ZoneMapMenu"]
 			LeaMapsDB["ShowMinimapIcon"] = LeaMapsLC["ShowMinimapIcon"]
 
 			-- Panel

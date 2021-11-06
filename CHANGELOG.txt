@@ -1,6 +1,8 @@
-1.14.06.alpha.1 - 30th October 2021
+1.14.06.alpha.2 - 6th October 2021
+- Updated for Season of Mastery.
 - Added new option called 'Increase zoom level'.  If enabled, you will be able to zoom further into the world map (up to 600% increased zoom).  You can set the maximum zoom level in the configuration panel.
 - If 'Enhance battlefield map' is enabled, you can set the maximum zoom level for the battlefield map in the configuration panel.
+- The zone map dropdown menu (normally shown in the map border) is now shown in the Leatrix Maps panel instead.
 - Changes to configuration panel layout.
 
 1.14.05 - 29th October 2021
