@@ -1,3 +1,6 @@
+1.14.07 - 10th November 2021
+- Updated for game version 1.14.1.
+
 1.14.06 - 6th November 2021
 - Updated for Season of Mastery.
 - Added new option called 'Increase zoom level'.  If enabled, you will be able to zoom further into the world map (up to 600% increased zoom).  You can set the maximum zoom level in the configuration panel.
