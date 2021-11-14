@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.07 (10th November 2021)
+	-- 	Leatrix Maps 1.14.08.alpha.1 (14th November 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.07"
+	LeaMapsLC["AddonVer"] = "1.14.08.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -2508,10 +2508,10 @@
 		end
 
 		----------------------------------------------------------------------
-		-- Add zone map dropdown to main panel (Season of Mastery only)
+		-- Add zone map dropdown to main panel
 		----------------------------------------------------------------------
 
-		if WorldMapZoneMinimapDropDown then
+		do
 
 			-- Hide zone map dropdown menu as it's shown in the main panel
 			WorldMapZoneMinimapDropDown:Hide()
