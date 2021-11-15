@@ -1,5 +1,5 @@
-1.14.08.alpha.1 - 14th November 2021
-- Maintenance update.
+1.14.08.alpha.2 - 15th November 2021
+- Fixed a minor issue with 'Enhance battlefield map' where the battlefield map tab remained visible on startup until the battlefield map was shown.
 
 1.14.07 - 10th November 2021
 - Updated for game version 1.14.1.
