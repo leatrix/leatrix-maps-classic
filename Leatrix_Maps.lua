@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.08 (17th November 2021)
+	-- 	Leatrix Maps 1.14.09.alpha.1 (19th November 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.08"
+	LeaMapsLC["AddonVer"] = "1.14.09.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -309,7 +309,7 @@
 				-- Function to update map
 				local function cUpdate(self, elapsed)
 					if cTime > 2 or cTime == -1 then
-						if IsMouseButtonDown("LeftButton") and BattlefieldMapFrame.ScrollContainer:IsMouseOver() then return end
+						if BattlefieldMapFrame.ScrollContainer:IsPanning() then return end
 						local position = C_Map.GetPlayerMapPosition(BattlefieldMapFrame.mapID, "player")
 						if position then
 							local x, y = position.x, position.y
@@ -563,7 +563,7 @@
 			-- Function to update map
 			local function cUpdate(self, elapsed)
 				if cTime > 2 or cTime == -1 then
-					if IsMouseButtonDown("LeftButton") and WorldMapFrame.ScrollContainer:IsMouseOver() then return end
+					if WorldMapFrame.ScrollContainer:IsPanning() then return end
 					local position = C_Map.GetPlayerMapPosition(WorldMapFrame.mapID, "player")
 					if position then
 						local x, y = position.x, position.y

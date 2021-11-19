@@ -1,3 +1,6 @@
+1.14.09.alpha.1 - 19th November 2021
+- Fixed a minor issue with 'Center map on player' (both world map and battlefield map) which sometimes caused a delay after opening the map before the map was centered.
+
 1.14.08 - 17th November 2021
 - Fixed a minor issue with 'Enhance battlefield map' where the battlefield map tab remained visible on startup until the battlefield map was shown.
 
