@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.09.alpha.1 (19th November 2021)
+	-- 	Leatrix Maps 1.14.09.alpha.2 (20th November 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.09.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.14.09.alpha.2"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -71,7 +71,7 @@
 			-- Add controls
 			LeaMapsLC:MakeTx(battleFrame, "Settings", 16, -72)
 			LeaMapsLC:MakeCB(battleFrame, "UnlockBattlefield", "Unlock battlefield map", 16, -92, false, "If checked, you can move the battlefield map by dragging any of its borders.|n|nYou can resize the battlefield map by dragging the bottom-right corner.")
-			LeaMapsLC:MakeCB(battleFrame, "BattleCenterOnPlayer", "Center map on player", 16, -112, false, "If checked, the battlefield map will stay centered on your location as long as you are not dragging the map or in a dungeon.")
+			LeaMapsLC:MakeCB(battleFrame, "BattleCenterOnPlayer", "Center map on player", 16, -112, false, "If checked, the battlefield map will stay centered on your location as long as you are not in a dungeon.|n|nYou can hold shift while panning the map to temporarily prevent it from centering.")
 
 			LeaMapsLC:MakeSL(battleFrame, "BattleGroupIconSize", "Group Icons", "Drag to set the group icon size.", 12, 24, 1, 206, -172, "%.0f")
 			LeaMapsLC:MakeSL(battleFrame, "BattlePlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.", 12, 24, 1, 36, -172, "%.0f")
@@ -309,7 +309,7 @@
 				-- Function to update map
 				local function cUpdate(self, elapsed)
 					if cTime > 2 or cTime == -1 then
-						if BattlefieldMapFrame.ScrollContainer:IsPanning() then return end
+						if BattlefieldMapFrame.ScrollContainer:IsPanning() or IsShiftKeyDown() then return end
 						local position = C_Map.GetPlayerMapPosition(BattlefieldMapFrame.mapID, "player")
 						if position then
 							local x, y = position.x, position.y
@@ -359,12 +359,13 @@
 					end
 				end)
 
-				-- Update location immediately when map is shown
-				BattlefieldMapFrame:HookScript("OnShow", function()
-					if LeaMapsLC["BattleCenterOnPlayer"] == "On" then
-						cTime = -1
-					end
-				end)
+				-- Update location immediately or after a very short delay
+				local function SetCenterNow() if LeaMapsLC["BattleCenterOnPlayer"] == "On" then cTime = -1 end	end
+				local function SetCenterSoon() if LeaMapsLC["BattleCenterOnPlayer"] == "On" then cTime = 1.7 end end
+
+				BattlefieldMapFrame.ScrollContainer:HookScript("OnMouseUp", SetCenterSoon)
+				BattlefieldMapFrame:HookScript("OnShow", SetCenterNow)
+				BattlefieldMapFrame.ScrollContainer:HookScript("OnMouseWheel", SetCenterSoon)
 
 			end
 
@@ -563,7 +564,7 @@
 			-- Function to update map
 			local function cUpdate(self, elapsed)
 				if cTime > 2 or cTime == -1 then
-					if WorldMapFrame.ScrollContainer:IsPanning() then return end
+					if WorldMapFrame.ScrollContainer:IsPanning() or IsShiftKeyDown() then return end
 					local position = C_Map.GetPlayerMapPosition(WorldMapFrame.mapID, "player")
 					if position then
 						local x, y = position.x, position.y
@@ -596,12 +597,13 @@
 			LeaMapsCB["CenterMapOnPlayer"]:HookScript("OnClick", SetUpdateFunc)
 			SetUpdateFunc()
 
-			-- Update location immediately when map is shown
-			WorldMapFrame:HookScript("OnShow", function()
-				if LeaMapsLC["CenterMapOnPlayer"] == "On" then
-					cTime = -1
-				end
-			end)
+			-- Update location immediately or after a very short delay
+			local function SetCenterNow() if LeaMapsLC["CenterMapOnPlayer"] == "On" then cTime = -1 end	end
+			local function SetCenterSoon() if LeaMapsLC["CenterMapOnPlayer"] == "On" then cTime = 1.7 end end
+
+			WorldMapFrame.ScrollContainer:HookScript("OnMouseUp", SetCenterSoon)
+			WorldMapFrame:HookScript("OnShow", SetCenterNow)
+			WorldMapFrame.ScrollContainer:HookScript("OnMouseWheel", SetCenterSoon)
 
 		end
 
@@ -3611,7 +3613,7 @@
 	LeaMapsLC:MakeTx(PageF, "Zoom", 16, -232)
 	LeaMapsLC:MakeCB(PageF, "RememberZoom", "Remember zoom level", 16, -252, false, "If checked, opening the map will use the same zoom level from when you last closed it as long as the map zone has not changed.")
 	LeaMapsLC:MakeCB(PageF, "IncreaseZoom", "Increase zoom level", 16, -272, false, "If checked, you will be able to zoom further into the world map.")
-	LeaMapsLC:MakeCB(PageF, "CenterMapOnPlayer", "Center map on player", 16, -292, false, "If checked, the map will stay centered on your location as long as you are not dragging the map or in a dungeon.")
+	LeaMapsLC:MakeCB(PageF, "CenterMapOnPlayer", "Center map on player", 16, -292, false, "If checked, the map will stay centered on your location as long as you are not in a dungeon.|n|nYou can hold shift while panning the map to temporarily prevent it from centering.")
 
 	LeaMapsLC:MakeTx(PageF, "System", 225, -72)
 	LeaMapsLC:MakeCB(PageF, "UnlockMapFrame", "Unlock map frame", 225, -92, false, "If checked, you will be able to scale and move the map.|n|nScale the map by dragging the scale handle in the bottom-right corner.|n|nMove the map by dragging the border and frame edges.")
