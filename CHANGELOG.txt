@@ -1,4 +1,4 @@
-1.14.09.alpha.2 - 20th November 2021
+1.14.09 - 24th November 2021
 - If 'Center map on player' is enabled (either world map or battlefield map), the map will center more quickly after zooming, panning, etc.  You can now hold shift while panning to temporarily prevent the map from centering.
 
 1.14.08 - 17th November 2021
