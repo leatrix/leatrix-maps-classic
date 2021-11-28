@@ -1,3 +1,6 @@
+1.14.10.alpha.1 - 28th November 2021
+- Changed the Leatrix Maps minimap icon.
+
 1.14.09 - 24th November 2021
 - If 'Center map on player' is enabled (either world map or battlefield map), the map will center more quickly after zooming, panning, etc.  You can now hold shift while panning to temporarily prevent the map from centering.
 
