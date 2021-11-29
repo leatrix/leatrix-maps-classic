@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.10.alpha.1 (28th November 2021)
+	-- 	Leatrix Maps 1.14.10.alpha.2 (29th November 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.10.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.14.10.alpha.2"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -73,9 +73,9 @@
 			LeaMapsLC:MakeCB(battleFrame, "UnlockBattlefield", "Unlock battlefield map", 16, -92, false, "If checked, you can move the battlefield map by dragging any of its borders.|n|nYou can resize the battlefield map by dragging the bottom-right corner.")
 			LeaMapsLC:MakeCB(battleFrame, "BattleCenterOnPlayer", "Center map on player", 16, -112, false, "If checked, the battlefield map will stay centered on your location as long as you are not in a dungeon.|n|nYou can hold shift while panning the map to temporarily prevent it from centering.")
 
-			LeaMapsLC:MakeSL(battleFrame, "BattleGroupIconSize", "Group Icons", "Drag to set the group icon size.", 12, 24, 1, 206, -172, "%.0f")
-			LeaMapsLC:MakeSL(battleFrame, "BattlePlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.", 12, 24, 1, 36, -172, "%.0f")
-			LeaMapsLC:MakeSL(battleFrame, "BattleMapSize", "Map Size", "Drag to set the battlefield map size.|n|nIf the map is unlocked, you can also resize the battlefield map by dragging the bottom-right corner.", 150, 900, 1, 36, -232, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattleGroupIconSize", "Group Icons", "Drag to set the group icon size.", 12, 48, 1, 206, -172, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattlePlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.", 12, 48, 1, 36, -172, "%.0f")
+			LeaMapsLC:MakeSL(battleFrame, "BattleMapSize", "Map Size", "Drag to set the battlefield map size.|n|nIf the map is unlocked, you can also resize the battlefield map by dragging the bottom-right corner.", 150, 1200, 1, 36, -232, "%.0f")
 			LeaMapsLC:MakeSL(battleFrame, "BattleMapOpacity", "Map Opacity", "Drag to set the battlefield map opacity.", 0.1, 1, 0.1, 206, -232, "%.0f")
 			LeaMapsLC:MakeSL(battleFrame, "BattleMaxZoom", "Max Zoom", "Drag to set the maximum zoom level.|n|nOpen the battlefield map to see the maximum zoom level change as you drag the slider.", 1, 6, 0.1, 36, -292, "%.0f")
 
@@ -235,7 +235,7 @@
 					BattlefieldMapFrame:StartSizing()
 					local mapTime = -1
 					frame:SetScript("OnUpdate", function(self, elapsed)
-						if BattlefieldMapFrame:GetWidth() > 900 then BattlefieldMapFrame:SetWidth(900) end
+						if BattlefieldMapFrame:GetWidth() > 1200 then BattlefieldMapFrame:SetWidth(1200) end
 						if BattlefieldMapFrame:GetWidth() < 150 then BattlefieldMapFrame:SetWidth(150) end
 						BattlefieldMapFrame:SetHeight(BattlefieldMapFrame:GetWidth() / 1.5)
 						if mapTime > 0.5 or mapTime == -1 then
@@ -639,7 +639,7 @@
 			-- Add controls
 			LeaMapsLC:MakeTx(classFrame, "Settings", 16, -72)
 			LeaMapsLC:MakeWD(classFrame, "Set the group icon size.", 16, -92)
-			LeaMapsLC:MakeSL(classFrame, "ClassIconSize", "Group Icons", "Drag to set the group icon size.", 20, 40, 1, 36, -142, "%.0f")
+			LeaMapsLC:MakeSL(classFrame, "ClassIconSize", "Group Icons", "Drag to set the group icon size.", 20, 80, 1, 36, -142, "%.0f")
 
 			-- Add preview texture
 			local prevIcon = classFrame:CreateTexture(nil, "ARTWORK")
@@ -905,7 +905,7 @@
 			-- Add controls
 			LeaMapsLC:MakeTx(arrowFrame, "Settings", 16, -72)
 			LeaMapsLC:MakeWD(arrowFrame, "Set the player arrow size.", 16, -92)
-			LeaMapsLC:MakeSL(arrowFrame, "PlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.|n|nWow Classic default is 16.|nWow Retail default is 27.", 16, 32, 1, 36, -142, "%.0f")
+			LeaMapsLC:MakeSL(arrowFrame, "PlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.|n|nWow Classic default is 16.|nWow Retail default is 27.", 16, 64, 1, 36, -142, "%.0f")
 
 			-- Function to set player arrow size
 			local function SetArrowSize()
@@ -2339,7 +2339,7 @@
 			local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("Leatrix_Maps", {
 				type = "data source",
 				text = "Leatrix Maps",
-				icon = "Interface\\HELPFRAME\\HelpIcon-AccountSecurity",
+				icon = "Interface\\HELPFRAME\\HelpIcon-Bug",
 				OnClick = function(self, btn)
 					MiniBtnClickFunc(btn)
 				end,
@@ -3375,9 +3375,9 @@
 			LeaMapsLC:LoadVarChk("IncreaseZoom", "Off")					-- Increase zoom level
 			LeaMapsLC:LoadVarNum("IncreaseZoomMax", 2, 1, 6)			-- Increase zoom level maximum
 			LeaMapsLC:LoadVarChk("EnlargePlayerArrow", "On")			-- Enlarge player arrow
-			LeaMapsLC:LoadVarNum("PlayerArrowSize", 27, 16, 32)			-- Player arrow size
+			LeaMapsLC:LoadVarNum("PlayerArrowSize", 27, 16, 64)			-- Player arrow size
 			LeaMapsLC:LoadVarChk("UseClassIcons", "On")					-- Use class icons
-			LeaMapsLC:LoadVarNum("ClassIconSize", 20, 20, 40)			-- Class icon size
+			LeaMapsLC:LoadVarNum("ClassIconSize", 20, 20, 80)			-- Class icon size
 			LeaMapsLC:LoadVarChk("UnlockMapFrame", "On")				-- Unlock map frame
 			LeaMapsLC:LoadVarAnc("MapPosA", "CENTER")					-- Map anchor
 			LeaMapsLC:LoadVarAnc("MapPosR", "CENTER")					-- Map relative
@@ -3413,10 +3413,10 @@
 			-- More
 			LeaMapsLC:LoadVarChk("EnhanceBattleMap", "Off")				-- Enhance battlefield map
 			LeaMapsLC:LoadVarChk("UnlockBattlefield", "On")				-- Unlock battlefield map
-			LeaMapsLC:LoadVarNum("BattleMapSize", 300, 150, 900)		-- Resize battlefield map
+			LeaMapsLC:LoadVarNum("BattleMapSize", 300, 150, 1200)		-- Resize battlefield map
 			LeaMapsLC:LoadVarChk("BattleCenterOnPlayer", "Off")			-- Center map on player
-			LeaMapsLC:LoadVarNum("BattleGroupIconSize", 12, 12, 24)		-- Battlefield group icon size
-			LeaMapsLC:LoadVarNum("BattlePlayerArrowSize", 12, 12, 24)	-- Battlefield player arrow size
+			LeaMapsLC:LoadVarNum("BattleGroupIconSize", 12, 12, 48)		-- Battlefield group icon size
+			LeaMapsLC:LoadVarNum("BattlePlayerArrowSize", 12, 12, 48)	-- Battlefield player arrow size
 			LeaMapsLC:LoadVarNum("BattleMapOpacity", 1, 0.1, 1)			-- Battlefield map opacity
 			LeaMapsLC:LoadVarNum("BattleMaxZoom", 1, 1, 6)				-- Battlefield map zoom
 			LeaMapsLC:LoadVarAnc("BattleMapA", "BOTTOMRIGHT")			-- Battlefield map anchor
