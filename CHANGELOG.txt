@@ -1,4 +1,4 @@
-1.14.10.alpha.2 - 29th November 2021
+1.14.10.alpha.3 - 29th November 2021
 - Player arrow and group icon maximum size (for both world map and battlefield map) and battlefield maximum size increased to 400%.
 - Changed the Leatrix Maps minimap icon.
 

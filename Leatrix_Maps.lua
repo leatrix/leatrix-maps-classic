@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.10.alpha.2 (29th November 2021)
+	-- 	Leatrix Maps 1.14.10.alpha.3 (29th November 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.10.alpha.2"
+	LeaMapsLC["AddonVer"] = "1.14.10.alpha.3"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -905,7 +905,7 @@
 			-- Add controls
 			LeaMapsLC:MakeTx(arrowFrame, "Settings", 16, -72)
 			LeaMapsLC:MakeWD(arrowFrame, "Set the player arrow size.", 16, -92)
-			LeaMapsLC:MakeSL(arrowFrame, "PlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.|n|nWow Classic default is 16.|nWow Retail default is 27.", 16, 64, 1, 36, -142, "%.0f")
+			LeaMapsLC:MakeSL(arrowFrame, "PlayerArrowSize", "Player Arrow", "Drag to set the player arrow size.", 16, 64, 1, 36, -142, "%.0f")
 
 			-- Function to set player arrow size
 			local function SetArrowSize()
