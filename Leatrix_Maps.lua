@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.10 (1st December 2021)
+	-- 	Leatrix Maps 1.14.11.alpha.1 (1st December 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.10"
+	LeaMapsLC["AddonVer"] = "1.14.11.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -1731,7 +1731,7 @@
 					{"Spirit", 11.0, 43.8, L["Spirit Healer"], nil, spTex, nil, nil},
 					{"Spirit", 49.3, 41.8, L["Spirit Healer"], nil, spTex, nil, nil},
 					{"Arrow", 51.3, 10.3, L["Arathi Highlands"], L["Thandol Span"], arTex, nil, nil, nil, nil, nil, 0, 1417},
-					{"Arrow", 56.0, 70.3, L["Loch Modan"], L["Dul Algaz"], arTex, nil, nil, nil, nil, nil, 1.8, 1432},
+					{"Arrow", 56.0, 70.3, L["Loch Modan"], L["Dun Algaz"], arTex, nil, nil, nil, nil, nil, 1.8, 1432},
 				},
 				--[[Stormwind City]] [1453] = {
 					{"Dungeon", 42.3, 59.0, L["The Stockade"], L["Dungeon"], dnTex, 24, 32},
