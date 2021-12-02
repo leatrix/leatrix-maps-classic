@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.11.alpha.1 (1st December 2021)
+	-- 	Leatrix Maps 1.14.11.alpha.2 (2nd December 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.11.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.14.11.alpha.2"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -1689,7 +1689,7 @@
 					{"Arrow", 20.4, 17.4, L["Dun Morogh"], L["North Gate Pass"], arTex, nil, nil, nil, nil, nil, 1.1, 1426},
 					{"Arrow", 46.8, 76.9, L["Badlands"], nil, arTex, nil, nil, nil, nil, nil, 3.2, 1418},
 					{"Arrow", 21.5, 66.2, L["Dun Morogh"], L["South Gate Pass"], arTex, nil, nil, nil, nil, nil, 0.5, 1426},
-					{"Arrow", 25.4, 10.9, L["Wetlands"], nil, arTex, nil, nil, nil, nil, nil, 0.1, 1437},
+					{"Arrow", 25.4, 10.9, L["Wetlands"], L["Dun Algaz"], arTex, nil, nil, nil, nil, nil, 0.1, 1437},
 				},
 				--[[Redridge Mountains]] [1433] = {
 					{"FlightA", 30.6, 59.4, L["Lake Everstill"] .. ", " .. L["Redridge Mountains"], nil, tATex, nil, nil},
