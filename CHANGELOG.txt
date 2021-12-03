@@ -1,4 +1,4 @@
-1.14.11.alpha.3 - 3rd December 2021
+1.14.11.alpha.4 - 3rd December 2021
 - Improved compatibility with Move And Improve addon.  If you are using MAI, don't use 'Sticky map frame' in LTM.
 
 1.14.10 - 1st December 2021

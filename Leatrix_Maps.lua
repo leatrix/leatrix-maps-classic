@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.11.alpha.3 (3rd December 2021)
+	-- 	Leatrix Maps 1.14.11.alpha.4 (3rd December 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.11.alpha.3"
+	LeaMapsLC["AddonVer"] = "1.14.11.alpha.4"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -1616,7 +1616,6 @@
 					{"Spirit", 39.2, 93.7, L["Spirit Healer"], nil, spTex, nil, nil},
 					{"Spirit", 80.4, 65.3, L["Spirit Healer"], nil, spTex, nil, nil},
 					{"Arrow", 11.8, 72.7, L["Western Plaguelands"], nil, arTex, nil, nil, nil, nil, nil, 1.6, 1422},
-					{"Arrow", 58.7, 17.5, L["Ghostlands"], nil, arTex, nil, nil, nil, nil, nil, 0.4, 1942},
 				},
 				--[[Hillsbrad Foothills]] [1424] = {
 					{"FlightA", 49.3, 52.3, L["Southshore"] .. ", " .. L["Hillsbrad Foothills"], nil, tATex, nil, nil},
