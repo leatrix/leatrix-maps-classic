@@ -1,5 +1,5 @@
-1.14.11.alpha.2 - 2nd December 2021
-- Maintenance update.
+1.14.11.alpha.3 - 3rd December 2021
+- Improved compatibility with Move And Improve addon.  If you are using MAI, don't use 'Sticky map frame' in LTM.
 
 1.14.10 - 1st December 2021
 - Added a new setting under 'Show points of interest' called 'Show zone crossings'.  If enabled, zone crossings will be shown.  These are clickable arrows indicating zone exit pathways.
