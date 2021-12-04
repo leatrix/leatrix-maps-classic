@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.11.alpha.5 (3rd December 2021)
+	-- 	Leatrix Maps 1.14.11.alpha.6 (4th December 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.11.alpha.5"
+	LeaMapsLC["AddonVer"] = "1.14.11.alpha.6"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -2022,6 +2022,8 @@
 								myPOI["description"] = pinInfo[5]
 								myPOI["atlasName"] = pinInfo[6]
 								local pin = self:GetMap():AcquirePin("LeaMapsGlobalPinTemplate", myPOI)
+								pin.Texture:SetRotation(0)
+								pin.HighlightTexture:SetRotation(0)
 								-- Override travel textures
 								if pinInfo[1] == "TravelA" then
 									pin.Texture:SetTexture("Interface\\AddOns\\Leatrix_Maps\\Leatrix_Maps.blp")
