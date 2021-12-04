@@ -1,4 +1,4 @@
-1.14.11.alpha.6 - 4th December 2021
+1.14.11.alpha.7 - 4th December 2021
 - If you have Move And Improve addon installed, the world map will now open but Leatrix Maps won't be able to position it properly and the 'Sticky map frame' setting won't do anything.
 
 1.14.10 - 1st December 2021
