@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.16 (22nd December 2021)
+	-- 	Leatrix Maps 1.14.17.alpha.1 (29th December 2021)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.16"
+	LeaMapsLC["AddonVer"] = "1.14.17.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -3375,6 +3375,36 @@
 					LoadAddOn("Blizzard_BattlefieldMap")
 				end
 				BattlefieldMapFrame:Show()
+				return
+			elseif str == "map" then
+				-- Set map by ID, print currently showing map ID or print character map ID
+				if not arg1 then
+					-- Print map ID
+					if WorldMapFrame:IsShown() then
+						-- Show world map ID
+						local mapID = WorldMapFrame.mapID or nil
+						local artID = C_Map.GetMapArtID(mapID) or nil
+						local mapName = C_Map.GetMapInfo(mapID).name or nil
+						if mapID and artID and mapName then
+							LeaMapsLC:Print(mapID .. " (" .. artID .. "): " .. mapName .. " (map)")
+						end
+					else
+						-- Show character map ID
+						local mapID = C_Map.GetBestMapForUnit("player") or nil
+						local artID = C_Map.GetMapArtID(mapID) or nil
+						local mapName = C_Map.GetMapInfo(mapID).name or nil
+						if mapID and artID and mapName then
+							LeaMapsLC:Print(mapID .. " (" .. artID .. "): " .. mapName .. " (player)")
+						end
+					end
+					return
+				elseif not tonumber(arg1) or not C_Map.GetMapInfo(arg1) then
+					-- Invalid map ID
+					LeaMapsLC:Print("Invalid map ID.")
+				else
+					-- Set map by ID
+					WorldMapFrame:SetMapID(tonumber(arg1))
+				end
 				return
 			elseif str == "admin" then
 				-- Preset profile (reload required)
