@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.28 (3rd February 2022)
+	-- 	Leatrix Maps 1.14.29.alpha.1 (3rd February 2022)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.28"
+	LeaMapsLC["AddonVer"] = "1.14.29.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -309,7 +309,8 @@
 				-- Function to update map
 				local function cUpdate(self, elapsed)
 					if cTime > 2 or cTime == -1 then
-						if BattlefieldMapFrame.ScrollContainer:IsPanning() or IsShiftKeyDown() then return end
+						if BattlefieldMapFrame.ScrollContainer:IsPanning() then return end
+						if IsShiftKeyDown() then cTime = -2000 return end
 						local position = C_Map.GetPlayerMapPosition(BattlefieldMapFrame.mapID, "player")
 						if position then
 							local x, y = position.x, position.y
@@ -360,8 +361,16 @@
 				end)
 
 				-- Update location immediately or after a very short delay
-				local function SetCenterNow() if LeaMapsLC["BattleCenterOnPlayer"] == "On" then cTime = -1 end	end
-				local function SetCenterSoon() if LeaMapsLC["BattleCenterOnPlayer"] == "On" then cTime = 1.7 end end
+				local function SetCenterNow()
+					if LeaMapsLC["BattleCenterOnPlayer"] == "On" then
+						if IsShiftKeyDown() then cTime = -2000 else	cTime = -1 end
+					end
+				end
+				local function SetCenterSoon()
+					if LeaMapsLC["BattleCenterOnPlayer"] == "On" then
+						if IsShiftKeyDown() then cTime = -2000 else cTime = 1.7 end
+					end
+				end
 
 				BattlefieldMapFrame.ScrollContainer:HookScript("OnMouseUp", SetCenterSoon)
 				BattlefieldMapFrame:HookScript("OnShow", SetCenterNow)
@@ -564,7 +573,8 @@
 			-- Function to update map
 			local function cUpdate(self, elapsed)
 				if cTime > 2 or cTime == -1 then
-					if WorldMapFrame.ScrollContainer:IsPanning() or IsShiftKeyDown() then return end
+					if WorldMapFrame.ScrollContainer:IsPanning() then return end
+					if IsShiftKeyDown() then cTime = -2000 return end
 					local position = C_Map.GetPlayerMapPosition(WorldMapFrame.mapID, "player")
 					if position then
 						local x, y = position.x, position.y
@@ -598,8 +608,16 @@
 			SetUpdateFunc()
 
 			-- Update location immediately or after a very short delay
-			local function SetCenterNow() if LeaMapsLC["CenterMapOnPlayer"] == "On" then cTime = -1 end	end
-			local function SetCenterSoon() if LeaMapsLC["CenterMapOnPlayer"] == "On" then cTime = 1.7 end end
+			local function SetCenterNow()
+				if LeaMapsLC["CenterMapOnPlayer"] == "On" then
+					if IsShiftKeyDown() then cTime = -2000 else	cTime = -1 end
+				end
+			end
+			local function SetCenterSoon()
+				if LeaMapsLC["CenterMapOnPlayer"] == "On" then
+					if IsShiftKeyDown() then cTime = -2000 else cTime = 1.7 end
+				end
+			end
 
 			WorldMapFrame.ScrollContainer:HookScript("OnMouseUp", SetCenterSoon)
 			WorldMapFrame:HookScript("OnShow", SetCenterNow)
