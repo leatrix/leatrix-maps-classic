@@ -1,5 +1,5 @@
-1.14.38 - 13th April 2022
-- Maintenance update.
+1.14.39 - 20th April 2022
+- Updated for game version 1.14.3.
 
 1.14.36 - 30th March 2022
 - Removed the incorrectly placed spirit healers in Winterspring and Badlands.
