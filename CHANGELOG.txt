@@ -1,5 +1,5 @@
-1.14.45 - 1st June 2022
-- Maintenance update.
+1.14.46.alpha.1 - 2nd June 2022
+- Added 'Ravenholdt Manor' zone crossing to Hillsbrad Foothills and Alterac Mountains maps.
 
 1.14.39 - 20th April 2022
 - Updated for game version 1.14.3.
