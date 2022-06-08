@@ -1,4 +1,4 @@
-1.14.46.alpha.1 - 2nd June 2022
+1.14.46 - 8th June 2022
 - Added 'Ravenholdt Manor' zone crossing to Hillsbrad Foothills and Alterac Mountains maps.
 
 1.14.39 - 20th April 2022
