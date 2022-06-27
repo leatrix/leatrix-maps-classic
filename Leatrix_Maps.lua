@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.48 (22nd June 2022)
+	-- 	Leatrix Maps 1.14.49.alpha.1 (27th June 2022)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.48"
+	LeaMapsLC["AddonVer"] = "1.14.49.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -116,7 +116,7 @@
 					BattlefieldMapFrame:StartMoving()
 				end
 			end)
-			eFrame:SetScript("OnMouseUp", function() 
+			eFrame:SetScript("OnMouseUp", function()
 				-- Save frame positions
 				BattlefieldMapFrame:StopMovingOrSizing()
 				LeaMapsLC["BattleMapA"], void, LeaMapsLC["BattleMapR"], LeaMapsLC["BattleMapX"], LeaMapsLC["BattleMapY"] = BattlefieldMapFrame:GetPoint()
@@ -192,7 +192,7 @@
 						zoomDeltaPerStep = 1
 					end
 					for zoomLevelIndex = 0, numZoomLevels - 1 do
-						currentScale = math.max(layerInfo.minScale + zoomDeltaPerStep * zoomLevelIndex, currentScale + MIN_SCALE_DELTA)		
+						currentScale = math.max(layerInfo.minScale + zoomDeltaPerStep * zoomLevelIndex, currentScale + MIN_SCALE_DELTA)
 						table.insert(self.zoomLevels, {scale = currentScale * self.baseScale, layerIndex = layerIndex})
 					end
 				end
@@ -427,7 +427,7 @@
 						pin:SetPinTexture("party", partyTexture)
 						pin:SetAppearanceField("party", "useClassColor", true)
 						pin:SetAppearanceField("raid", "useClassColor", true)
-						
+
 						-- Icons should be under the player arrow
 						pin:SetAppearanceField("party", "sublevel", 0)
 						pin:SetAppearanceField("raid", "sublevel", 0)
@@ -551,7 +551,7 @@
 			hooksecurefunc(BaseMapPoiPinMixin, "OnAcquired", function(self)
 				local wmapID = WorldMapFrame.mapID
 				if wmapID and wmapID == 1414 or wmapID == 1415 or wmapID == 947 then
-					if self.Texture and self.Texture:GetTexture() == 136441 then 
+					if self.Texture and self.Texture:GetTexture() == 136441 then
 						local a, b, c, d, e, f, g, h = self.Texture:GetTexCoord()
 						if a == 0.5 and b == 0 and c == 0.5 and d == 0.125 and e == 0.625 and f == 0 and g == 0.625 and h == 0.125 then
 							-- Hide town icons
@@ -1041,7 +1041,7 @@
 					local name, description
 					local mapID = map:GetMapID()
 					local normalizedCursorX, normalizedCursorY = map:GetNormalizedCursorPosition()
-					local positionMapInfo = C_Map.GetMapInfoAtPosition(mapID, normalizedCursorX, normalizedCursorY)	
+					local positionMapInfo = C_Map.GetMapInfoAtPosition(mapID, normalizedCursorX, normalizedCursorY)
 					if positionMapInfo and positionMapInfo.mapID ~= mapID then
 						-- print(positionMapInfo.mapID)
 						name = positionMapInfo.name
@@ -1152,7 +1152,7 @@
 			local cCursor = CreateFrame("Frame", nil, WorldMapFrame)
 			cCursor:SetPoint("BOTTOMLEFT", 73, 7)
 			cCursor:SetSize(200, 16)
-			cCursor.x = cCursor:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
+			cCursor.x = cCursor:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 			cCursor.x:SetJustifyH"LEFT"
 			cCursor.x:SetAllPoints()
 			cCursor.x:SetText(L["Cursor"] .. ": 88.8, 88.8")
@@ -1162,7 +1162,7 @@
 			local cPlayer = CreateFrame("Frame", nil, WorldMapFrame)
 			cPlayer:SetPoint("BOTTOMRIGHT", -46, 7)
 			cPlayer:SetSize(200, 16)
-			cPlayer.x = cPlayer:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge") 
+			cPlayer.x = cPlayer:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 			cPlayer.x:SetJustifyH"LEFT"
 			cPlayer.x:SetAllPoints()
 			cPlayer.x:SetText(L["Player"] .. ": 88.8, 88.8")
@@ -1349,7 +1349,7 @@
 						zoomDeltaPerStep = 1
 					end
 					for zoomLevelIndex = 0, numZoomLevels - 1 do
-						currentScale = math.max(layerInfo.minScale + zoomDeltaPerStep * zoomLevelIndex, currentScale + MIN_SCALE_DELTA)		
+						currentScale = math.max(layerInfo.minScale + zoomDeltaPerStep * zoomLevelIndex, currentScale + MIN_SCALE_DELTA)
 						table.insert(self.zoomLevels, {scale = currentScale * self.baseScale, layerIndex = layerIndex})
 					end
 				end
@@ -2095,7 +2095,7 @@
 			end
 
 			WorldMapFrame:AddDataProvider(LeaMix)
-	
+
 			----------------------------------------------------------------------
 			-- Configuration panel
 			----------------------------------------------------------------------
@@ -2719,7 +2719,7 @@
 	function LeaMapsLC:CreateBar(name, parent, width, height, anchor, r, g, b, alp, tex)
 		local ft = parent:CreateTexture(nil, "BORDER")
 		ft:SetTexture(tex)
-		ft:SetSize(width, height)  
+		ft:SetSize(width, height)
 		ft:SetPoint(anchor)
 		ft:SetVertexColor(r ,g, b, alp)
 		if name == "MainTexture" then
@@ -2753,7 +2753,7 @@
 		Side.t:SetColorTexture(0.05, 0.05, 0.05, 0.9)
 
 		-- Add a close Button
-		Side.c = CreateFrame("Button", nil, Side, "UIPanelCloseButton") 
+		Side.c = CreateFrame("Button", nil, Side, "UIPanelCloseButton")
 		Side.c:SetSize(30, 30)
 		Side.c:SetPoint("TOPRIGHT", 0, 0)
 		Side.c:SetScript("OnClick", function() Side:Hide() end)
@@ -2817,7 +2817,7 @@
 		Side.v:SetPoint('RIGHT', Side, -32, 0)
 		Side.v:SetJustifyH('LEFT'); Side.v:SetJustifyV('TOP')
 		Side.v:SetText(L["Configuration Panel"])
-	
+
 		-- Prevent options panel from showing while side panel is showing
 		LeaMapsLC["PageF"]:HookScript("OnShow", function()
 			if Side:IsShown() then LeaMapsLC["PageF"]:Hide(); end
@@ -3008,13 +3008,13 @@
 		local dd = CreateFrame("Frame", nil, frame); dd:SetPoint("BOTTOMLEFT", -16, -8); dd:SetPoint("BOTTOMRIGHT", 15, -4); dd:SetHeight(32);
 
 		-- Create dropdown textures
-		local lt = dd:CreateTexture(nil, "ARTWORK"); lt:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame"); lt:SetTexCoord(0, 0.1953125, 0, 1); lt:SetPoint("TOPLEFT", dd, 0, 17); lt:SetWidth(25); lt:SetHeight(64); 
-		local rt = dd:CreateTexture(nil, "BORDER"); rt:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame"); rt:SetTexCoord(0.8046875, 1, 0, 1); rt:SetPoint("TOPRIGHT", dd, 0, 17); rt:SetWidth(25); rt:SetHeight(64); 
+		local lt = dd:CreateTexture(nil, "ARTWORK"); lt:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame"); lt:SetTexCoord(0, 0.1953125, 0, 1); lt:SetPoint("TOPLEFT", dd, 0, 17); lt:SetWidth(25); lt:SetHeight(64);
+		local rt = dd:CreateTexture(nil, "BORDER"); rt:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame"); rt:SetTexCoord(0.8046875, 1, 0, 1); rt:SetPoint("TOPRIGHT", dd, 0, 17); rt:SetWidth(25); rt:SetHeight(64);
 		local mt = dd:CreateTexture(nil, "BORDER"); mt:SetTexture("Interface\\Glues\\CharacterCreate\\CharacterCreate-LabelFrame"); mt:SetTexCoord(0.1953125, 0.8046875, 0, 1); mt:SetPoint("LEFT", lt, "RIGHT"); mt:SetPoint("RIGHT", rt, "LEFT"); mt:SetHeight(64);
 
 		-- Create dropdown label
 		local lf = dd:CreateFontString(nil, "OVERLAY", "GameFontNormal"); lf:SetPoint("TOPLEFT", frame, 0, 0); lf:SetPoint("TOPRIGHT", frame, -5, 0); lf:SetJustifyH("LEFT"); lf:SetText(L[label])
-	
+
 		-- Create dropdown placeholder for value (set it using OnShow)
 		local value = dd:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 		value:SetPoint("LEFT", lt, 26, 2); value:SetPoint("RIGHT", rt, -43, 0); value:SetJustifyH("LEFT")
@@ -3076,7 +3076,7 @@
 			-- Show list when button is clicked
 			dbtn:SetScript("OnClick", function()
 				-- Show the dropdown
-				if ddlist:IsShown() then ddlist:Hide() else 
+				if ddlist:IsShown() then ddlist:Hide() else
 					ddlist:Show();
 					ddlistchk:SetPoint("TOPLEFT",10,select(5,LeaMapsCB["Drop"..ddname..LeaMapsLC[ddname]]:GetPoint()))
 					ddlistchk:Show();
@@ -3095,7 +3095,7 @@
 		end
 
 		return frame
-		
+
 	end
 
 	-- Set reload button status
@@ -3134,7 +3134,7 @@
 		text:SetJustifyH("LEFT")
 		text:SetText(L[title])
 		if width then
-			text:SetWidth(width) 
+			text:SetWidth(width)
 		else
 			if text:GetWidth() > 402 then
 				text:SetWidth(402)
@@ -3349,7 +3349,7 @@
 	stopRelBtn:Hide(); stopRelBtn:Show()
 
 	-- Add close Button
-	local stopFrameClose = CreateFrame("Button", nil, stopFrame, "UIPanelCloseButton") 
+	local stopFrameClose = CreateFrame("Button", nil, stopFrame, "UIPanelCloseButton")
 	stopFrameClose:SetSize(30, 30)
 	stopFrameClose:SetPoint("TOPRIGHT", 0, 0)
 
@@ -3525,7 +3525,7 @@
 
 	-- Add slash commands
 	_G.SLASH_Leatrix_Maps1 = "/ltm"
-	_G.SLASH_Leatrix_Maps2 = "/leamaps" 
+	_G.SLASH_Leatrix_Maps2 = "/leamaps"
 	SlashCmdList["Leatrix_Maps"] = function(self)
 		-- Run slash command function
 		SlashFunc(self)
@@ -3779,7 +3779,7 @@
 	reloadb.f:Hide()
 
 	-- Add close Button
-	local CloseB = CreateFrame("Button", nil, PageF, "UIPanelCloseButton") 
+	local CloseB = CreateFrame("Button", nil, PageF, "UIPanelCloseButton")
 	CloseB:SetSize(30, 30)
 	CloseB:SetPoint("TOPRIGHT", 0, 0)
 
@@ -3814,15 +3814,15 @@
 	LeaMapsLC:MakeCB(PageF, "EnhanceBattleMap", "Enhance battlefield map", 225, -352, true, "If checked, you will be able to customise the battlefield map.")
 	LeaMapsLC:MakeCB(PageF, "ShowMinimapIcon", "Show minimap button", 225, -372, false, "If checked, the minimap button will be shown.")
 
- 	LeaMapsLC:CfgBtn("IncreaseZoomBtn", LeaMapsCB["IncreaseZoom"])
- 	LeaMapsLC:CfgBtn("RevTintBtn", LeaMapsCB["RevealMap"])
- 	LeaMapsLC:CfgBtn("EnlargePlayerArrowBtn", LeaMapsCB["EnlargePlayerArrow"])
- 	LeaMapsLC:CfgBtn("UseClassIconsBtn", LeaMapsCB["UseClassIcons"])
- 	LeaMapsLC:CfgBtn("UnlockMapFrameBtn", LeaMapsCB["UnlockMapFrame"])
- 	LeaMapsLC:CfgBtn("SetMapOpacityBtn", LeaMapsCB["SetMapOpacity"])
- 	LeaMapsLC:CfgBtn("ShowPointsOfInterestBtn", LeaMapsCB["ShowPointsOfInterest"])
- 	LeaMapsLC:CfgBtn("ShowZoneLevelsBtn", LeaMapsCB["ShowZoneLevels"])
- 	LeaMapsLC:CfgBtn("EnhanceBattleMapBtn", LeaMapsCB["EnhanceBattleMap"])
+	LeaMapsLC:CfgBtn("IncreaseZoomBtn", LeaMapsCB["IncreaseZoom"])
+	LeaMapsLC:CfgBtn("RevTintBtn", LeaMapsCB["RevealMap"])
+	LeaMapsLC:CfgBtn("EnlargePlayerArrowBtn", LeaMapsCB["EnlargePlayerArrow"])
+	LeaMapsLC:CfgBtn("UseClassIconsBtn", LeaMapsCB["UseClassIcons"])
+	LeaMapsLC:CfgBtn("UnlockMapFrameBtn", LeaMapsCB["UnlockMapFrame"])
+	LeaMapsLC:CfgBtn("SetMapOpacityBtn", LeaMapsCB["SetMapOpacity"])
+	LeaMapsLC:CfgBtn("ShowPointsOfInterestBtn", LeaMapsCB["ShowPointsOfInterest"])
+	LeaMapsLC:CfgBtn("ShowZoneLevelsBtn", LeaMapsCB["ShowZoneLevels"])
+	LeaMapsLC:CfgBtn("EnhanceBattleMapBtn", LeaMapsCB["EnhanceBattleMap"])
 
 	-- Add reset map position button
 	local resetMapPosBtn = LeaMapsLC:CreateButton("resetMapPosBtn", PageF, "Reset Map Layout", "BOTTOMLEFT", 16, 10, 25, "Click to reset the position and scale of the map frame.")
