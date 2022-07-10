@@ -1,5 +1,5 @@
-1.14.50 - 6th July 2022
-- Maintenance update.
+1.14.51.alpha.1 - 10th July 2022
+- For 'Show zone crossings', Mulgore and Thunder Bluff maps now show north and zone crossing arrows.
 
 1.14.48 - 22nd June 2022
 - In the game key bindings menu, you can now set a keybind to toggle Leatrix Maps.
