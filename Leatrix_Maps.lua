@@ -3215,6 +3215,11 @@
 		ddlistchk:SetHeight(16); ddlistchk:SetWidth(16)
 		ddlistchk.t = ddlistchk:CreateTexture(nil, "ARTWORK"); ddlistchk.t:SetAllPoints(); ddlistchk.t:SetTexture("Interface\\Common\\UI-DropDownRadioChecks"); ddlistchk.t:SetTexCoord(0, 0.5, 0.5, 1.0);
 
+		-- Lock dropdown menu if there is only one list item and it is 3 hyphens
+		if #items == 1 and items[1] == "---" then
+			dbtn:Disable()
+		end
+
 		-- Create dropdown list items
 		for k, v in pairs(items) do
 
