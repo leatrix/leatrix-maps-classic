@@ -1,4 +1,5 @@
-1.14.51.alpha.1 - 10th July 2022
+1.14.51.alpha.1 - 12th July 2022
+- Added a new setting 'Show zone menu'.  If enabled, a zone dropdown menu will be shown in the map frame.  It will show the name of the map and allow you to see any map from the same continent.  It's enabled by default.
 - For 'Show zone crossings', Mulgore and Thunder Bluff maps now show north and zone crossing arrows.
 
 1.14.48 - 22nd June 2022
