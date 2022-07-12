@@ -62,19 +62,20 @@
 
 		if LeaMapsLC["ShowZoneMenu"] == "On" then
 
-			-- Store dropdown menu position
-			local menuA, menuX, menuY = "TOP", 0, -12
-
-			-- No map border
+			-- Create outer frame for dropdown menus
+			local outerFrame = CreateFrame("FRAME", nil, WorldMapFrame)
+			outerFrame:SetSize(360, 20)
 			if LeaMapsLC["NoMapBorder"] == "On" and LeaMapsLC["UseDefaultMap"] == "Off" then
-				menuA, menuX, menuY = "TOPLEFT", 10, -52
+				outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 10, -50)
+			else
+				outerFrame:SetPoint("TOP", WorldMapFrame, "TOP", 0, -12)
 			end
 
 			-- Create No zones available dropdown menu
 			LeaMapsLC["ZoneMapNoneMenu"] = 1
-			local nodd = LeaMapsLC:CreateDropDown("ZoneMapNoneMenu", "", WorldMapFrame, 180, "TOP", -80, -35, {"No zones available."}, "")
+			local nodd = LeaMapsLC:CreateDropDown("ZoneMapNoneMenu", "", WorldMapFrame, 180, "TOP", -80, -35, {"---"}, "")
 			nodd:ClearAllPoints()
-			nodd:SetPoint(menuA, WorldMapFrame, menuA, menuX, menuY)
+			nodd:SetPoint("TOPRIGHT", outerFrame, "TOPRIGHT", 0, 0)
 
 			-- Create Eastern Kingdoms dropdown menu
 			LeaMapsLC["ZoneMapEasternMenu"] = 1
@@ -96,7 +97,7 @@
 
 			local ekdd = LeaMapsLC:CreateDropDown("ZoneMapEasternMenu", "", WorldMapFrame, 180, "TOP", -80, -35, mapEasternString, "")
 			ekdd:ClearAllPoints()
-			ekdd:SetPoint(menuA, WorldMapFrame, menuA, menuX, menuY)
+			ekdd:SetPoint("TOPRIGHT", outerFrame, "TOPRIGHT", 0, 0)
 
 			LeaMapsCB["ListFrameZoneMapEasternMenu"]:HookScript("OnHide", function()
 				WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
@@ -122,10 +123,50 @@
 
 			local kmdd = LeaMapsLC:CreateDropDown("ZoneMapKalimdorMenu", "", WorldMapFrame, 180, "TOP", -80, -35, mapKalimdorString, "")
 			kmdd:ClearAllPoints()
-			kmdd:SetPoint(menuA, WorldMapFrame, menuA, menuX, menuY)
+			kmdd:SetPoint("TOPRIGHT", outerFrame, "TOPRIGHT", 0, 0)
 
 			LeaMapsCB["ListFrameZoneMapKalimdorMenu"]:HookScript("OnHide", function()
 				WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
+			end)
+
+			-- Create continent dropdown menu
+			LeaMapsLC["ZoneMapContinentMenu"] = 1
+
+			local mapContinentTable, mapContinentString = {}, {}
+
+			tinsert(mapContinentString, 1, L["Eastern Kingdoms"])
+			tinsert(mapContinentTable, 1, {zonename = L["Eastern Kingdoms"], mapid = 1415})
+			tinsert(mapContinentString, 2, L["Kalimdor"])
+			tinsert(mapContinentTable, 2, {zonename = L["Kalimdor"], mapid = 1414})
+			tinsert(mapContinentString, 3, L["Azeroth"])
+			tinsert(mapContinentTable, 3, {zonename = L["Azeroth"], mapid = 947})
+
+			local cond = LeaMapsLC:CreateDropDown("ZoneMapContinentMenu", "", WorldMapFrame, 180, "TOP", -80, -35, mapContinentString, "")
+			cond:ClearAllPoints()
+			cond:SetPoint("TOPLEFT", outerFrame, "TOPLEFT", 0, 0)
+
+			-- Create Azeroth lists
+			local mapAzerothTable, mapAzerothString = {}, {}
+			tinsert(mapAzerothString, 1, L["Azeroth"])
+			tinsert(mapAzerothTable, 1, {zonename = L["Azeroth"], mapid = 947})
+
+			-- Continent dropdown menu handler
+			LeaMapsCB["ListFrameZoneMapContinentMenu"]:HookScript("OnHide", function()
+				nodd:Hide()
+				if LeaMapsLC["ZoneMapContinentMenu"] == 1 then
+					ekdd:Show()
+					kmdd:Hide()
+					WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
+				elseif LeaMapsLC["ZoneMapContinentMenu"] == 2 then
+					ekdd:Hide()
+					kmdd:Show()
+					WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
+				elseif LeaMapsLC["ZoneMapContinentMenu"] == 3 then
+					ekdd:Hide()
+					kmdd:Hide()
+					nodd:Show()
+					WorldMapFrame:SetMapID(947)
+				end
 			end)
 
 			-- Function to set dropdown menu
@@ -134,14 +175,15 @@
 				-- Show relevant dropdown menu
 				ekdd:Hide()
 				kmdd:Hide()
-				nodd:Show()
+				cond:Hide()
+				nodd:Hide()
 
 				-- Eastern Kingdoms
 				for k, v in pairs(mapEasternTable) do
 					if v.mapid == WorldMapFrame.mapID then
 						LeaMapsLC["ZoneMapEasternMenu"] = k
 						ekdd:Show()
-						nodd:Hide()
+						LeaMapsLC["ZoneMapContinentMenu"] = 1; cond:Show()
 					end
 				end
 
@@ -150,13 +192,21 @@
 					if v.mapid == WorldMapFrame.mapID then
 						LeaMapsLC["ZoneMapKalimdorMenu"] = k
 						kmdd:Show()
-						nodd:Hide()
+						LeaMapsLC["ZoneMapContinentMenu"] = 2; cond:Show()
 					end
+				end
+
+				-- Azeroth
+				if WorldMapFrame.mapID == 947 then
+					LeaMapsLC["ZoneMapContinentMenu"] = 3; cond:Show()
+					nodd:Show()
 				end
 
 				-- Hide dropdown menu list items
 				LeaMapsCB["ListFrameZoneMapEasternMenu"]:Hide()
 				LeaMapsCB["ListFrameZoneMapKalimdorMenu"]:Hide()
+				LeaMapsCB["ListFrameZoneMapContinentMenu"]:Hide()
+				LeaMapsCB["ListFrameZoneMapNoneMenu"]:Hide()
 
 			end
 
@@ -3908,7 +3958,7 @@
 	-- Add content
 	LeaMapsLC:MakeTx(PageF, "Appearance", 16, -72)
 	LeaMapsLC:MakeCB(PageF, "NoMapBorder", "Remove map border", 16, -92, true, "If checked, the map border will be removed.")
-	LeaMapsLC:MakeCB(PageF, "ShowZoneMenu", "Show zone menu", 16, -112, true, "If checked, a zone dropdown menu will be shown in the map frame.|n|nIt will show the name of the map and allow you to see any zone map from the same continent.")
+	LeaMapsLC:MakeCB(PageF, "ShowZoneMenu", "Show zone menu", 16, -112, true, "If checked, zone and continent dropdown menus will be shown in the map frame.")
 	LeaMapsLC:MakeCB(PageF, "SetMapOpacity", "Set map opacity", 16, -132, false, "If checked, you will be able to set the opacity of the map.")
 
 	LeaMapsLC:MakeTx(PageF, "Icons", 16, -172)
