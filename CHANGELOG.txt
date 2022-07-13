@@ -1,6 +1,9 @@
+1.14.52.alpha.1 - 14th July 2022
+- Maintenance update.
+
 1.14.51 - 13th July 2022
 - Added a new setting 'Show zone menus'.  If enabled, continent and zone dropdown menus will be shown in the map frame allowing you to see the current map zone and change it as you wish.  It's enabled by default.
-- For 'Show zone crossings', Mulgore and Thunder Bluff maps now show north and zone crossing arrows.
+- For 'Show zone crossings', Mulgore and Thunder Bluff maps now show north and south zone crossing arrows.
 
 1.14.48 - 22nd June 2022
 - In the game key bindings menu, you can now set a keybind to toggle Leatrix Maps.
