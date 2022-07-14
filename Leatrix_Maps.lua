@@ -157,18 +157,16 @@
 
 			-- Continent dropdown menu handler
 			LeaMapsCB["ListFrameZoneMapContinentMenu"]:HookScript("OnHide", function()
+				ekdd:Hide()
+				kmdd:Hide()
 				nodd:Hide()
 				if LeaMapsLC["ZoneMapContinentMenu"] == 1 then
 					ekdd:Show()
-					kmdd:Hide()
 					WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
 				elseif LeaMapsLC["ZoneMapContinentMenu"] == 2 then
-					ekdd:Hide()
 					kmdd:Show()
 					WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
 				elseif LeaMapsLC["ZoneMapContinentMenu"] == 3 then
-					ekdd:Hide()
-					kmdd:Hide()
 					nodd:Show()
 					WorldMapFrame:SetMapID(947)
 				end
