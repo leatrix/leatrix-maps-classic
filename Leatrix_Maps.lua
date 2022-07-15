@@ -81,6 +81,7 @@
 			local nodd = LeaMapsLC:CreateDropDown("ZoneMapNoneMenu", "", WorldMapFrame, 180, "TOP", -80, -35, {"---"}, "")
 			nodd:ClearAllPoints()
 			nodd:SetPoint("TOPRIGHT", outerFrame, "TOPRIGHT", 0, 0)
+			nodd.btn:Disable()
 
 			-- Create Eastern Kingdoms dropdown menu
 			LeaMapsLC["ZoneMapEasternMenu"] = 1
@@ -157,9 +158,7 @@
 
 			-- Continent dropdown menu handler
 			LeaMapsCB["ListFrameZoneMapContinentMenu"]:HookScript("OnHide", function()
-				ekdd:Hide()
-				kmdd:Hide()
-				nodd:Hide()
+				ekdd:Hide(); kmdd:Hide(); nodd:Hide()
 				if LeaMapsLC["ZoneMapContinentMenu"] == 1 then
 					ekdd:Show()
 					WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
@@ -176,10 +175,13 @@
 			local function SetMapControls()
 
 				-- Show relevant dropdown menu
-				ekdd:Hide()
-				kmdd:Hide()
-				cond:Hide()
-				nodd:Hide()
+				ekdd:Hide(); kmdd:Hide(); cond:Hide(); nodd:Hide()
+
+				-- Hide dropdown menu list items
+				LeaMapsCB["ListFrameZoneMapEasternMenu"]:Hide()
+				LeaMapsCB["ListFrameZoneMapKalimdorMenu"]:Hide()
+				LeaMapsCB["ListFrameZoneMapContinentMenu"]:Hide()
+				LeaMapsCB["ListFrameZoneMapNoneMenu"]:Hide()
 
 				-- Eastern Kingdoms
 				for k, v in pairs(mapEasternTable) do
@@ -187,6 +189,7 @@
 						LeaMapsLC["ZoneMapEasternMenu"] = k
 						ekdd:Show()
 						LeaMapsLC["ZoneMapContinentMenu"] = 1; cond:Show()
+						return
 					end
 				end
 
@@ -196,20 +199,16 @@
 						LeaMapsLC["ZoneMapKalimdorMenu"] = k
 						kmdd:Show()
 						LeaMapsLC["ZoneMapContinentMenu"] = 2; cond:Show()
+						return
 					end
 				end
 
 				-- Azeroth
 				if WorldMapFrame.mapID == 947 then
-					LeaMapsLC["ZoneMapContinentMenu"] = 3; cond:Show()
 					nodd:Show()
+					LeaMapsLC["ZoneMapContinentMenu"] = 3; cond:Show()
+					return
 				end
-
-				-- Hide dropdown menu list items
-				LeaMapsCB["ListFrameZoneMapEasternMenu"]:Hide()
-				LeaMapsCB["ListFrameZoneMapKalimdorMenu"]:Hide()
-				LeaMapsCB["ListFrameZoneMapContinentMenu"]:Hide()
-				LeaMapsCB["ListFrameZoneMapNoneMenu"]:Hide()
 
 			end
 
@@ -3193,6 +3192,7 @@
 			dbtn.tiptext = tip; dbtn:SetScript("OnEnter", LeaMapsLC.ShowTooltip)
 			dbtn:SetScript("OnLeave", GameTooltip_Hide)
 		end
+		frame.btn = dbtn
 
 		-- Create dropdown list
 		local ddlist =  CreateFrame("Frame",nil,frame, "BackdropTemplate")
@@ -3212,11 +3212,6 @@
 		local ddlistchk = CreateFrame("FRAME", nil, ddlist)
 		ddlistchk:SetHeight(16); ddlistchk:SetWidth(16)
 		ddlistchk.t = ddlistchk:CreateTexture(nil, "ARTWORK"); ddlistchk.t:SetAllPoints(); ddlistchk.t:SetTexture("Interface\\Common\\UI-DropDownRadioChecks"); ddlistchk.t:SetTexCoord(0, 0.5, 0.5, 1.0);
-
-		-- Lock dropdown menu if there is only one list item and it is 3 hyphens
-		if #items == 1 and items[1] == "---" then
-			dbtn:Disable()
-		end
 
 		-- Create dropdown list items
 		for k, v in pairs(items) do
