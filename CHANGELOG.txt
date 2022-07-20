@@ -1,5 +1,5 @@
-1.14.52.alpha.2 - 19th July 2022
-- Fixed a minor cosmetic issue with 'Show zone menus' which may have sometimes caused menus to overlap.  If you use ElvUI with ElvUI world map skin, the dropdown menus now more closely match ElvUI style.
+1.14.52 - 20th July 2022
+- Fixed a minor cosmetic issue with 'Show zone menus' which may have sometimes caused menus to overlap.  Added skins for ElvUI.
 
 1.14.51 - 13th July 2022
 - Added a new setting 'Show zone menus'.  If enabled, continent and zone dropdown menus will be shown in the map frame allowing you to see the current map zone and change it as you wish.  It's enabled by default.
