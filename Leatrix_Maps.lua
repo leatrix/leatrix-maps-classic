@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.52 (20th July 2022)
+	-- 	Leatrix Maps 1.14.53.alpha.1 (22nd July 2022)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.52"
+	LeaMapsLC["AddonVer"] = "1.14.53.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -1651,6 +1651,26 @@
 				waitFrame:SetScript("OnEvent", function(self, event, arg1)
 					if arg1 == "Carbonite" then
 						CaboniteFix()
+						waitFrame:UnregisterAllEvents()
+					end
+				end)
+			end
+
+			-- Fix for Demodal clamping the map frame to the screen
+			local function FixDemodal()
+				if WorldMapFrame:IsClampedToScreen() then
+					WorldMapFrame:SetClampedToScreen(false)
+				end
+			end
+
+			if IsAddOnLoaded("Demodal") then
+				FixDemodal()
+			else
+				local waitFrame = CreateFrame("FRAME")
+				waitFrame:RegisterEvent("ADDON_LOADED")
+				waitFrame:SetScript("OnEvent", function(self, event, arg1)
+					if arg1 == "Demodal" then
+						FixDemodal()
 						waitFrame:UnregisterAllEvents()
 					end
 				end)

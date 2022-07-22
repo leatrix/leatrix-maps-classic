@@ -1,3 +1,6 @@
+1.14.53.alpha.1 - 22nd July 2022
+- For 'Unlock map frame', added a fix for Demodal preventing the map frame from being moved to the top edge of the screen.
+
 1.14.52 - 20th July 2022
 - Fixed a minor cosmetic issue with 'Show zone menus' which may have sometimes caused menus to overlap.  Added skins for ElvUI.
 
