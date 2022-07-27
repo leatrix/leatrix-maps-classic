@@ -1,4 +1,4 @@
-1.14.53.alpha.1 - 22nd July 2022
+1.14.53 - 27th July 2022
 - For 'Unlock map frame', added a fix for Demodal preventing the map frame from being moved to the top edge of the screen.
 
 1.14.52 - 20th July 2022
