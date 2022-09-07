@@ -1,5 +1,5 @@
-1.14.59 - 7th September 2022
-- Maintenance update.
+1.14.60.alpha.1 - 7th September 2022
+- Locale updates.
 
 1.14.53 - 27th July 2022
 - For 'Unlock map frame', added a fix for Demodal preventing the map frame from being moved to the top edge of the screen.
