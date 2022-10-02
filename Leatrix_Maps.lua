@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.63.alpha.1 (2nd October 2022)
+	-- 	Leatrix Maps 1.14.63.alpha.2 (2nd October 2022)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.63.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.14.63.alpha.2"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -2358,10 +2358,16 @@
 			-- Lock some incompatible options
 			LeaMapsLC:LockItem(LeaMapsCB["NoMapBorder"], true)
 			LeaMapsLC:LockItem(LeaMapsCB["UnlockMapFrame"], true)
-			LeaMapsLC:LockItem(LeaMapsCB["UnlockMapFrameBtn"], true)
 			LeaMapsLC:LockItem(LeaMapsCB["StickyMapFrame"], true)
 			-- Lock reset map layout button
 			LeaMapsLC:LockItem(LeaMapsCB["resetMapPosBtn"], true)
+		end
+
+		if LeaMapsLC["UseDefaultMap"] == "On" then
+			LeaMapsLC:LockItem(LeaMapsCB["UnlockMapFrameBtn"], true)
+			LeaMapsCB["UseDefaultMap"]:HookScript("OnClick", function()
+				LeaMapsLC:LockItem(LeaMapsCB["UnlockMapFrameBtn"], true)
+			end)
 		end
 
 		----------------------------------------------------------------------
