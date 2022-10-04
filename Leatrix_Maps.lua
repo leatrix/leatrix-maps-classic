@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.63.alpha.2 (2nd October 2022)
+	-- 	Leatrix Maps 1.14.63.alpha.3 (4th October 2022)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.63.alpha.2"
+	LeaMapsLC["AddonVer"] = "1.14.63.alpha.3"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -2363,13 +2363,6 @@
 			LeaMapsLC:LockItem(LeaMapsCB["resetMapPosBtn"], true)
 		end
 
-		if LeaMapsLC["UseDefaultMap"] == "On" then
-			LeaMapsLC:LockItem(LeaMapsCB["UnlockMapFrameBtn"], true)
-			LeaMapsCB["UseDefaultMap"]:HookScript("OnClick", function()
-				LeaMapsLC:LockItem(LeaMapsCB["UnlockMapFrameBtn"], true)
-			end)
-		end
-
 		----------------------------------------------------------------------
 		-- Third party fixes
 		----------------------------------------------------------------------
@@ -2747,6 +2740,10 @@
 		LeaMapsLC:LockOption("ShowPointsOfInterest", "ShowPointsOfInterestBtn", false) -- Show points of interest
 		LeaMapsLC:LockOption("ShowZoneLevels", "ShowZoneLevelsBtn", false) -- Show zone levels
 		LeaMapsLC:LockOption("EnhanceBattleMap", "EnhanceBattleMapBtn", true) -- Enhance battlefield map
+		-- Ensure locked but enabled options remain locked
+		if LeaMapsLC["UseDefaultMap"] == "On" then
+			LeaMapsCB["UnlockMapFrameBtn"]:Disable()
+		end
 	end
 
 	-- Create a standard button
