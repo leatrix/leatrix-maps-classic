@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.67 (2nd November 2022)
+	-- 	Leatrix Maps 1.14.68 (9th November 2022)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.67"
+	LeaMapsLC["AddonVer"] = "1.14.68"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -1598,9 +1598,6 @@
 			WorldMapFrame:SetIgnoreParentScale(false)
 			WorldMapFrame.ScrollContainer:SetIgnoreParentScale(false)
 			WorldMapFrame.BlackoutFrame:Hide()
-			WorldMapFrame:SetFrameStrata("MEDIUM")
-			WorldMapFrame.BorderFrame:SetFrameStrata("MEDIUM")
-			WorldMapFrame.BorderFrame:SetFrameLevel(1)
 			WorldMapFrame.IsMaximized = function() return false end
 			WorldMapFrame.HandleUserActionToggleSelf = function()
 				if WorldMapFrame:IsShown() then WorldMapFrame:Hide() else WorldMapFrame:Show() end
