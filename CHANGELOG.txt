@@ -1,5 +1,5 @@
-1.14.68 - 9th November 2022
-- Maintenance update.
+1.14.69 - 15th November 2022
+- Updated LibDBIcon.
 
 1.14.61 - 21st September 2022
 - File structure updates.
