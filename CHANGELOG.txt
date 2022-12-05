@@ -1,4 +1,4 @@
-1.14.73.alpha.1 - 1st December 2022
+1.14.73 - 5th December 2022
 - Adjusted world map frame strata.
 
 1.14.72 - 30th November 2022
