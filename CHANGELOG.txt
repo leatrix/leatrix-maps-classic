@@ -1,5 +1,6 @@
-1.14.80.alpha.1 - 30th January 2023
+1.14.80.alpha.2 - 30th January 2023
 - For 'Show points of interest', clicking a travel icon or a portal icon will now show the destination map.
+- Updated LibDBIcon.
 
 1.14.73 - 5th December 2022
 - Adjusted world map frame strata.
