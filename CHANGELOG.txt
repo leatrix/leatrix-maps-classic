@@ -1,3 +1,6 @@
+1.14.114.alpha.1 - 19th June 2023
+- Updated LibDBIcon.
+
 1.14.82 - 8th February 2023
 - For 'Show points of interest', clicking a travel icon or a portal icon will now show the destination map.
 - Updated LibDBIcon.
