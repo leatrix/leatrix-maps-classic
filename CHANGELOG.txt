@@ -1,3 +1,6 @@
+1.14.122 - 23rd August 2023
+- Updated for game version 14.4.
+
 1.14.114 - 28th June 2023
 - Updated LibDBIcon.
 
