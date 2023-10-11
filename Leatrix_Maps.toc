@@ -3,7 +3,7 @@
 ## Title: Leatrix Maps
 ## Notes: Enhancements for your maps.
 
-## Version: 1.14.130
+## Version: 1.14.131
 ## Author: Leatrix
 ## SavedVariables: LeaMapsDB
 
