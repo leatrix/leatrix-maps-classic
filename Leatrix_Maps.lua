@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.14.132 (18th October 2023)
+	-- 	Leatrix Maps 1.14.133.alpha.1 (18th October 2023)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -9,10 +9,10 @@
 	_G.LeaMapsDB = _G.LeaMapsDB or {}
 
 	-- Create local tables
-	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList = {}, {}, {}, {}
+	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.14.132"
+	LeaMapsLC["AddonVer"] = "1.14.133.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -29,6 +29,11 @@
 			return
 		end
 	end
+
+	-- Check for addons
+	if IsAddOnLoaded("ElvUI") then LeaMapsLC.ElvUI = unpack(ElvUI) end
+	if IsAddOnLoaded("Carbonite") then LeaMapsLC.Carbonite = true end
+	if IsAddOnLoaded("Demodal") then LeaMapsLC.Demodal = true end
 
 	-- Set bindings translations
 	_G.BINDING_NAME_LEATRIX_MAPS_GLOBAL_TOGGLE = L["Toggle panel"]
@@ -61,6 +66,11 @@
 			WorldMapFrame:SetFrameStrata("MEDIUM")
 			WorldMapFrame.BorderFrame:SetFrameStrata("MEDIUM")
 			WorldMapFrame.BorderFrame:SetFrameLevel(1)
+		end
+
+		-- Hide the default map blackout frame
+		if LeaMapsLC["UseDefaultMap"] == "On" then
+			WorldMapFrame.BlackoutFrame:Hide()
 		end
 
 		----------------------------------------------------------------------
@@ -224,8 +234,8 @@
 			WorldMapFrame:HookScript("OnShow", SetMapControls)
 
 			-- ElvUI fixes
-			local function ElvUIFixes()
-				local E, S = unpack(ElvUI)
+			if LeaMapsLC.ElvUI then
+				local E, S = LeaMapsLC.ElvUI
 				local S = E:GetModule('Skins')
 				if E.private.skins.blizzard.enable and E.private.skins.blizzard.worldmap then
 					S:HandleDropDownBox(ekdd.dd); ekdd.bg:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark", edgeFile = "", tile = false, tileSize = 0, edgeSize = 32, insets = { left = 4, right = -6, top = 0, bottom = 0 }});
@@ -238,20 +248,6 @@
 					cond.btn:SetHitRectInsets(cond.btn:GetHitRectInsets() - 10, 0, 0, 0)
 					nodd.btn:SetHitRectInsets(nodd.btn:GetHitRectInsets() - 10, 0, 0, 0)
 				end
-			end
-
-			-- Run ElvUI fixes when ElvUI has loaded
-			if IsAddOnLoaded("ElvUI") then
-				ElvUIFixes()
-			else
-				local waitFrame = CreateFrame("FRAME")
-				waitFrame:RegisterEvent("ADDON_LOADED")
-				waitFrame:SetScript("OnEvent", function(self, event, arg1)
-					if arg1 == "ElvUI" then
-						ElvUIFixes()
-						waitFrame:UnregisterAllEvents()
-					end
-				end)
 			end
 
 		end
@@ -1636,8 +1632,8 @@
 			WorldMapFrame:ClearAllPoints()
 			WorldMapFrame:SetPoint(LeaMapsLC["MapPosA"], UIParent, LeaMapsLC["MapPosR"], LeaMapsLC["MapPosX"], LeaMapsLC["MapPosY"])
 
-			-- Function to set position after Carbonite has loaded
-			local function CaboniteFix()
+			-- Fix for Carbonite changing map position
+			if LeaMapsLC.Carbonite then
 				hooksecurefunc(WorldMapFrame, "Show", function()
 					if Nx.db.profile.Map.MaxOverride == false then
 						WorldMapFrame:ClearAllPoints()
@@ -1646,38 +1642,11 @@
 				end)
 			end
 
-			-- Run function when Carbonite has loaded
-			if IsAddOnLoaded("Carbonite") then
-				CaboniteFix()
-			else
-				local waitFrame = CreateFrame("FRAME")
-				waitFrame:RegisterEvent("ADDON_LOADED")
-				waitFrame:SetScript("OnEvent", function(self, event, arg1)
-					if arg1 == "Carbonite" then
-						CaboniteFix()
-						waitFrame:UnregisterAllEvents()
-					end
-				end)
-			end
-
 			-- Fix for Demodal clamping the map frame to the screen
-			local function FixDemodal()
+			if LeaMapsLC.Demodal then
 				if WorldMapFrame:IsClampedToScreen() then
 					WorldMapFrame:SetClampedToScreen(false)
 				end
-			end
-
-			if IsAddOnLoaded("Demodal") then
-				FixDemodal()
-			else
-				local waitFrame = CreateFrame("FRAME")
-				waitFrame:RegisterEvent("ADDON_LOADED")
-				waitFrame:SetScript("OnEvent", function(self, event, arg1)
-					if arg1 == "Demodal" then
-						FixDemodal()
-						waitFrame:UnregisterAllEvents()
-					end
-				end)
 			end
 
 		end
@@ -1686,23 +1655,24 @@
 		-- Set map opacity
 		----------------------------------------------------------------------
 
-		do
+		if LeaMapsLC["SetMapOpacity"] == "On" and not LeaLockList["SetMapOpacity"] then
 
-			-- Create configuraton panel
-			local alphaFrame = LeaMapsLC:CreatePanel("Set map opacity", "alphaFrame")
+			if LeaMapsLC["UseDefaultMap"] == "Off" then
 
-			-- Add controls
-			LeaMapsLC:MakeTx(alphaFrame, "Settings", 16, -72)
-			LeaMapsLC:MakeWD(alphaFrame, "Set map opacity while stationary and while moving.", 16, -92)
-			LeaMapsLC:MakeSL(alphaFrame, "stationaryOpacity", "Stationary", "Drag to set the map opacity for when your character is stationary.", 0.1, 1, 0.1, 36, -142, "%.1f")
-			LeaMapsLC:MakeSL(alphaFrame, "movingOpacity", "Moving", "Drag to set the map opacity for when your character is moving.", 0.1, 1, 0.1, 206, -142, "%.1f")
-			LeaMapsLC:MakeCB(alphaFrame, "NoFadeCursor", "Use stationary opacity while pointing at map", 16, -182, false, "If checked, pointing at the map while your character is moving will cause the stationary opacity setting to be applied.")
+				-- Create configuraton panel
+				local alphaFrame = LeaMapsLC:CreatePanel("Set map opacity", "alphaFrame")
 
-			-- Function to set map opacity
-			local function SetMapOpacity()
-				LeaMapsCB["stationaryOpacity"].f:SetFormattedText("%.0f%%", LeaMapsLC["stationaryOpacity"] * 100)
-				LeaMapsCB["movingOpacity"].f:SetFormattedText("%.0f%%", LeaMapsLC["movingOpacity"] * 100)
-				if LeaMapsLC["SetMapOpacity"] == "On" then
+				-- Add controls
+				LeaMapsLC:MakeTx(alphaFrame, "Settings", 16, -72)
+				LeaMapsLC:MakeWD(alphaFrame, "Set map opacity while stationary and while moving.", 16, -92)
+				LeaMapsLC:MakeSL(alphaFrame, "stationaryOpacity", "Stationary", "Drag to set the map opacity for when your character is stationary.", 0.1, 1, 0.1, 36, -142, "%.1f")
+				LeaMapsLC:MakeSL(alphaFrame, "movingOpacity", "Moving", "Drag to set the map opacity for when your character is moving.", 0.1, 1, 0.1, 206, -142, "%.1f")
+				LeaMapsLC:MakeCB(alphaFrame, "NoFadeCursor", "Use stationary opacity while pointing at map", 16, -182, false, "If checked, pointing at the map while your character is moving will cause the stationary opacity setting to be applied.")
+
+				-- Function to set map opacity
+				local function SetMapOpacity()
+					LeaMapsCB["stationaryOpacity"].f:SetFormattedText("%.0f%%", LeaMapsLC["stationaryOpacity"] * 100)
+					LeaMapsCB["movingOpacity"].f:SetFormattedText("%.0f%%", LeaMapsLC["movingOpacity"] * 100)
 					-- Set opacity level as frame fader only takes effect when player moves
 					if IsPlayerMoving() then
 						WorldMapFrame:SetAlpha(LeaMapsLC["movingOpacity"])
@@ -1711,48 +1681,44 @@
 					end
 					-- Setup frame fader
 					PlayerMovementFrameFader.AddDeferredFrame(WorldMapFrame, LeaMapsLC["movingOpacity"], LeaMapsLC["stationaryOpacity"], 0.5, function() return not WorldMapFrame:IsMouseOver() or LeaMapsLC["NoFadeCursor"] == "Off" end)
-				else
-					-- Remove frame fader and set map to full opacity
-					PlayerMovementFrameFader.RemoveFrame(WorldMapFrame)
-					WorldMapFrame:SetAlpha(1)
 				end
-			end
 
-			-- Set map opacity when options are changed and on startup
-			LeaMapsCB["stationaryOpacity"]:HookScript("OnValueChanged", SetMapOpacity)
-			LeaMapsCB["movingOpacity"]:HookScript("OnValueChanged", SetMapOpacity)
-			LeaMapsCB["SetMapOpacity"]:HookScript("OnClick", SetMapOpacity)
-			SetMapOpacity()
-
-			-- Back to Main Menu button click
-			alphaFrame.b:HookScript("OnClick", function()
-				alphaFrame:Hide()
-				LeaMapsLC["PageF"]:Show()
-			end)
-
-			-- Reset button click
-			alphaFrame.r:HookScript("OnClick", function()
-				LeaMapsLC["stationaryOpacity"] = 1.0
-				LeaMapsLC["movingOpacity"] = 0.5
-				LeaMapsLC["NoFadeCursor"] = "On"
+				-- Set map opacity when options are changed and on startup
+				LeaMapsCB["stationaryOpacity"]:HookScript("OnValueChanged", SetMapOpacity)
+				LeaMapsCB["movingOpacity"]:HookScript("OnValueChanged", SetMapOpacity)
 				SetMapOpacity()
-				alphaFrame:Hide(); alphaFrame:Show()
-			end)
 
-			-- Show configuration panel when configuration button is clicked
-			LeaMapsCB["SetMapOpacityBtn"]:HookScript("OnClick", function()
-				if IsShiftKeyDown() and IsControlKeyDown() then
-					-- Preset profile
+				-- Back to Main Menu button click
+				alphaFrame.b:HookScript("OnClick", function()
+					alphaFrame:Hide()
+					LeaMapsLC["PageF"]:Show()
+				end)
+
+				-- Reset button click
+				alphaFrame.r:HookScript("OnClick", function()
 					LeaMapsLC["stationaryOpacity"] = 1.0
 					LeaMapsLC["movingOpacity"] = 0.5
 					LeaMapsLC["NoFadeCursor"] = "On"
 					SetMapOpacity()
-					if alphaFrame:IsShown() then alphaFrame:Hide(); alphaFrame:Show(); end
-				else
-					alphaFrame:Show()
-					LeaMapsLC["PageF"]:Hide()
-				end
-			end)
+					alphaFrame:Hide(); alphaFrame:Show()
+				end)
+
+				-- Show configuration panel when configuration button is clicked
+				LeaMapsCB["SetMapOpacityBtn"]:HookScript("OnClick", function()
+					if IsShiftKeyDown() and IsControlKeyDown() then
+						-- Preset profile
+						LeaMapsLC["stationaryOpacity"] = 1.0
+						LeaMapsLC["movingOpacity"] = 0.5
+						LeaMapsLC["NoFadeCursor"] = "On"
+						SetMapOpacity()
+						if alphaFrame:IsShown() then alphaFrame:Hide(); alphaFrame:Show(); end
+					else
+						alphaFrame:Show()
+						LeaMapsLC["PageF"]:Hide()
+					end
+				end)
+
+			end
 
 		end
 
@@ -2361,8 +2327,17 @@
 			WorldMapFrame:SetScale(1)
 			-- Lock some incompatible options
 			LeaMapsLC:LockItem(LeaMapsCB["NoMapBorder"], true)
+			LeaMapsCB["NoMapBorder"].tiptext = LeaMapsCB["NoMapBorder"].tiptext .. "|n|n|cff00AAFF" .. L["Cannot be used with Use default map."]
+
+			LeaMapsLC:LockItem(LeaMapsCB["SetMapOpacity"], true)
+			LeaMapsCB["SetMapOpacity"].tiptext = LeaMapsCB["SetMapOpacity"].tiptext .. "|n|n|cff00AAFF" .. L["Cannot be used with Use default map."]
+
 			LeaMapsLC:LockItem(LeaMapsCB["UnlockMapFrame"], true)
+			LeaMapsCB["UnlockMapFrame"].tiptext = LeaMapsCB["UnlockMapFrame"].tiptext .. "|n|n|cff00AAFF" .. L["Cannot be used with Use default map."]
+
 			LeaMapsLC:LockItem(LeaMapsCB["StickyMapFrame"], true)
+			LeaMapsCB["StickyMapFrame"].tiptext = LeaMapsCB["StickyMapFrame"].tiptext .. "|n|n|cff00AAFF" .. L["Cannot be used with Use default map."]
+
 			-- Lock reset map layout button
 			LeaMapsLC:LockItem(LeaMapsCB["resetMapPosBtn"], true)
 		end
@@ -2371,37 +2346,16 @@
 		-- Third party fixes
 		----------------------------------------------------------------------
 
-		do
-
-			-- Function to fix third party addons
-			local function thirdPartyFunc(thirdPartyAddOn)
-				if thirdPartyAddOn == "ElvUI" then
-					-- ElvUI: Fix map movement and scale
-					hooksecurefunc(WorldMapFrame, "Show", function()
-						if not WorldMapFrame:IsMouseEnabled() then
-							WorldMapFrame:EnableMouse(true)
-							if LeaMapsLC["UseDefaultMap"] == "Off" then
-								WorldMapFrame:SetScale(LeaMapsLC["MapScale"])
-							end
-						end
-					end)
-				end
-			end
-
-			-- Run function when third party addon has loaded
-			if IsAddOnLoaded("ElvUI") then
-				thirdPartyFunc("ElvUI")
-			else
-				local waitFrame = CreateFrame("FRAME")
-				waitFrame:RegisterEvent("ADDON_LOADED")
-				waitFrame:SetScript("OnEvent", function(self, event, arg1)
-					if arg1 == "ElvUI" then
-						thirdPartyFunc("ElvUI")
-						waitFrame:UnregisterAllEvents()
+		-- ElvUI: Fix map movement and scale
+		if LeaMapsLC.ElvUI then
+			hooksecurefunc(WorldMapFrame, "Show", function()
+				if not WorldMapFrame:IsMouseEnabled() then
+					WorldMapFrame:EnableMouse(true)
+					if LeaMapsLC["UseDefaultMap"] == "Off" then
+						WorldMapFrame:SetScale(LeaMapsLC["MapScale"])
 					end
-				end)
-			end
-
+				end
+			end)
 		end
 
 		----------------------------------------------------------------------
@@ -2740,12 +2694,13 @@
 		LeaMapsLC:LockOption("EnlargePlayerArrow", "EnlargePlayerArrowBtn", false) -- Enlarge player arrow
 		LeaMapsLC:LockOption("UseClassIcons", "UseClassIconsBtn", true) -- Class colored icons
 		LeaMapsLC:LockOption("UnlockMapFrame", "UnlockMapFrameBtn", false) -- Unlock map frame
-		LeaMapsLC:LockOption("SetMapOpacity", "SetMapOpacityBtn", false) -- Set map opacity
+		LeaMapsLC:LockOption("SetMapOpacity", "SetMapOpacityBtn", true) -- Set map opacity
 		LeaMapsLC:LockOption("ShowPointsOfInterest", "ShowPointsOfInterestBtn", false) -- Show points of interest
 		LeaMapsLC:LockOption("ShowZoneLevels", "ShowZoneLevelsBtn", false) -- Show zone levels
 		LeaMapsLC:LockOption("EnhanceBattleMap", "EnhanceBattleMapBtn", true) -- Enhance battlefield map
 		-- Ensure locked but enabled options remain locked
 		if LeaMapsLC["UseDefaultMap"] == "On" then
+			LeaMapsCB["SetMapOpacityBtn"]:Disable()
 			LeaMapsCB["UnlockMapFrameBtn"]:Disable()
 		end
 	end
@@ -2905,6 +2860,7 @@
 	function LeaMapsLC:ReloadCheck()
 		if	(LeaMapsLC["NoMapBorder"] ~= LeaMapsDB["NoMapBorder"])				-- Remove map border
 		or	(LeaMapsLC["ShowZoneMenu"] ~= LeaMapsDB["ShowZoneMenu"])			-- Show zone menu
+		or	(LeaMapsLC["SetMapOpacity"] ~= LeaMapsDB["SetMapOpacity"])			-- Set map opacity
 		or	(LeaMapsLC["UseClassIcons"] ~= LeaMapsDB["UseClassIcons"])			-- Use class colors
 		or	(LeaMapsLC["StickyMapFrame"] ~= LeaMapsDB["StickyMapFrame"])		-- Sticky map frame
 		or	(LeaMapsLC["AutoChangeZones"] ~= LeaMapsDB["AutoChangeZones"])		-- Auto change zones
@@ -3425,6 +3381,39 @@
 			-- Set initial minimum button position
 			if not LeaMapsDB["minimapPos"] then
 				LeaMapsDB["minimapPos"] = 204
+			end
+
+			-- Lock conflicting options
+			do
+
+				-- Function to disable and lock an option and add a note to the tooltip
+				local function Lock(option, reason, optmodule)
+					LeaLockList[option] = LeaMapsLC[option]
+					LeaMapsLC:LockItem(LeaMapsCB[option], true)
+					LeaMapsCB[option].tiptext = LeaMapsCB[option].tiptext .. "|n|n|cff00AAFF" .. reason
+					if optmodule then
+						LeaMapsCB[option].tiptext = LeaMapsCB[option].tiptext .. " " .. optmodule .. " " .. L["module"]
+					end
+					LeaMapsCB[option].tiptext = LeaMapsCB[option].tiptext .. "."
+					-- Remove hover from configuration button if there is one
+					local temp = {LeaMapsCB[option]:GetChildren()}
+					if temp and temp[1] and temp[1].t and temp[1].t:GetTexture() == "Interface\\WorldMap\\Gear_64.png" then
+						temp[1]:SetHighlightTexture(0)
+						temp[1]:SetScript("OnEnter", nil)
+					end
+				end
+
+				-- Disable items that conflict with ElvUI
+				if LeaMapsLC.ElvUI then
+					local E = LeaMapsLC.ElvUI
+					if E and E.private then
+						local reason = L["Cannot be used with ElvUI"]
+						if E.private.general.worldMap then
+							Lock("SetMapOpacity", reason, "Maps") -- Set map opacity
+						end
+						EnableAddOn("Leatrix_Maps")
+					end
+				end
 			end
 
 		elseif event == "PLAYER_ENTERING_WORLD" then

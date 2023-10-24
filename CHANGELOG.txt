@@ -1,3 +1,7 @@
+1.14.133.alpha.1 - 23rd August 2023
+- For 'Set map opacity', toggling the option now requires a UI reload.  The option will be locked out if ElvUI is installed with the maps module enabled.
+- For 'Use default map', the blackout frame is now hidden and the 'Set map opacity' option will be locked out.
+
 1.14.122 - 23rd August 2023
 - Updated for game version 14.4.
 
