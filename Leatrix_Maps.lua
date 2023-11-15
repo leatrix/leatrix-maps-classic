@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.01.alpha.1 (15th November 2023)
+	-- 	Leatrix Maps 1.15.01 (15th November 2023)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.01.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.15.01"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -61,10 +61,10 @@
 		-- Make the map bigger
 		if LeaMapsLC["UseDefaultMap"] == "Off" then
 			SetCVar("miniWorldMap", 1)
-			-- WorldMapFrame.minimizedWidth = 1024
-			-- WorldMapFrame.minimizedHeight = 740
-			-- Not setting map size because it affects other map addons such as Questie
-			-- WorldMapFrame:SetSize(WorldMapFrame.minimizedWidth, WorldMapFrame.minimizedHeight) -- Needed for Classic Era
+			WorldMapFrame.minimizedWidth = 1024
+			WorldMapFrame.minimizedHeight = 740
+			-- Resizing the map makes Questie icons smaller but works with GatherMate2
+			WorldMapFrame:SetSize(WorldMapFrame.minimizedWidth, WorldMapFrame.minimizedHeight) -- Needed for Classic Era
 			WorldMapFrame:OnFrameSizeChanged()
 		end
 
@@ -1883,9 +1883,10 @@
 								pin.Texture:SetRotation(0)
 								pin.HighlightTexture:SetRotation(0)
 								-- Set pin scale (needed because changing map size affects other addons such as Questie)
+								-- Not currently used as map is resized
 								if LeaMapsLC["UseDefaultMap"] == "Off" then
-									pin.Texture:SetScale(0.7)
-									pin.HighlightTexture:SetScale(0.7)
+									--pin.Texture:SetScale(0.7)
+									--pin.HighlightTexture:SetScale(0.7)
 								end
 								-- Override travel textures
 								if pinInfo[1] == "TravelA" then
