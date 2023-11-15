@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.00 (15th November 2023)
+	-- 	Leatrix Maps 1.15.01.alpha.1 (15th November 2023)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.00"
+	LeaMapsLC["AddonVer"] = "1.15.01.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -61,8 +61,8 @@
 		-- Make the map bigger
 		if LeaMapsLC["UseDefaultMap"] == "Off" then
 			SetCVar("miniWorldMap", 1)
-			WorldMapFrame.minimizedWidth = 1024
-			WorldMapFrame.minimizedHeight = 740
+			-- WorldMapFrame.minimizedWidth = 1024
+			-- WorldMapFrame.minimizedHeight = 740
 			-- Not setting map size because it affects other map addons such as Questie
 			-- WorldMapFrame:SetSize(WorldMapFrame.minimizedWidth, WorldMapFrame.minimizedHeight) -- Needed for Classic Era
 			WorldMapFrame:OnFrameSizeChanged()
@@ -113,14 +113,25 @@
 		WorldMapZoomOutButton:SetParent(menuTempFrame)
 		WorldMapZoneMinimapDropDown:SetParent(menuTempFrame)
 
-		-- Hide world map title button (used for movement) if default maximised map is showing
-		hooksecurefunc(WorldMapFrame, "SynchronizeDisplayState", function()
-			if LeaMapsLC["UseDefaultMap"] == "On" and GetCVar("miniWorldMap") == "0" then
-				WorldMapTitleButton:Hide()
+		-- Function to show world map title button if default windowed map is showing
+		local function SetWorldMapTitleButton()
+			if LeaMapsLC["UseDefaultMap"] == "On" then
+				if GetCVar("miniWorldMap") == "0" then
+					-- Default maximised map so hide title button
+					WorldMapTitleButton:Hide()
+				else
+					-- Default windowed map so hide title button
+					WorldMapTitleButton:Show()
+				end
 			else
-				WorldMapTitleButton:Show()
+				-- Custom map so hide title button
+				WorldMapTitleButton:Hide()
 			end
-		end)
+		end
+
+		-- Run function when maximised map is toggled and on startup
+		hooksecurefunc(WorldMapFrame, "SynchronizeDisplayState", SetWorldMapTitleButton)
+		SetWorldMapTitleButton()
 
 		-- Hide right-click to zoom out button and message
 		WorldMapZoomOutButton:Hide()
@@ -2401,7 +2412,7 @@
 
 		if LeaMapsLC["UseDefaultMap"] == "On" then
 			-- Maximise world map and set to 100% scale
-			MaximizeUIPanel(WorldMapFrame)
+			-- MaximizeUIPanel(WorldMapFrame) -- Not used for Classic since it prevents map movement
 			WorldMapFrame:SetScale(1)
 			-- Lock some incompatible options
 			LeaMapsLC:LockItem(LeaMapsCB["SetMapOpacity"], true)

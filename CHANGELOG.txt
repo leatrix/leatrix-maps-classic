@@ -1,3 +1,6 @@
+1.15.01.alpha.1 - 15th November 2023
+- Fixed issue with map position not being saved.
+
 1.15.00 - 15th November 2023
 - Preliminary update for game version 1.15.0.
 - For 'Use default map', the map title will be shown if you are not using 'Show zone menus'.
