@@ -1,3 +1,8 @@
+1.15.00 - 15th November 2023
+- Preliminary update for game version 1.15.0.
+- For 'Use default map', the map title will be shown if you are not using 'Show zone menus'.
+- The 'Remove map border' option has been removed.
+
 1.14.133 - 25th August 2023
 - For 'Set map opacity', toggling the option now requires a UI reload.  The option will be locked out if ElvUI is installed with the maps module enabled.
 - For 'Use default map', the blackout frame is now hidden.  The 'Set map opacity' option will be locked out.
