@@ -1,3 +1,6 @@
+1.15.02 - 16th November 2023
+- Fixed map border frame for ElvUI.
+
 1.15.01 - 15th November 2023
 - Fixed issue with map scaling.  Note that if you are using Questie and 'Use default map' is disabled, you may need to open Questie options, click the Map tab and set the global scale for map icons to 1 (default is 0.6 but this may be too small).
 - Fixed issue with map position not being saved.

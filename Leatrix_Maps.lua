@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.01 (15th November 2023)
+	-- 	Leatrix Maps 1.15.02 (16th November 2023)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.01"
+	LeaMapsLC["AddonVer"] = "1.15.02"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -2445,6 +2445,10 @@
 					end
 				end
 			end)
+			-- Hide ElvUI border backdrop
+			if LeaMapsLC["UseDefaultMap"] == "Off" and WorldMapFrame.MiniBorderFrame.backdrop then
+				WorldMapFrame.MiniBorderFrame.backdrop:Hide()
+			end
 		end
 
 		----------------------------------------------------------------------
