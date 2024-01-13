@@ -284,6 +284,8 @@
 			{"Spirit", 41.8, 36.6, L["Spirit Healer"], nil, spTex, nil, nil},
 			{"Spirit", 43.6, 92.4, L["Spirit Healer"], nil, spTex, nil, nil},
 			{"Arrow", 43.3, 94.0, L["Ashenvale"], nil, arTex, nil, nil, nil, nil, nil, 4, 1440},
+			{"Arrow", 37.5, 94.8, L["Ashenvale"], nil, arTex, nil, nil, nil, nil, nil, 3.1, 1440},
+			{"Arrow", 27.7, 92.9, L["Ashenvale"], L["The Zoram Strand"], arTex, nil, nil, nil, nil, nil, 2.5, 1440},
 		},
 		--[[Ashenvale]] [1440] = {
 			{"Dungeon", 14.5, 14.2, L["Blackfathom Deeps"], L["Dungeon"], dnTex, 24, 32},
@@ -297,6 +299,8 @@
 			{"Arrow", 55.8, 30.2, L["Felwood"], nil, arTex, nil, nil, nil, nil, nil, 0, 1448},
 			{"Arrow", 94.2, 47.3, L["Azshara"], nil, arTex, nil, nil, nil, nil, nil, 4.4, 1447},
 			{"Arrow", 68.6, 86.8, L["The Barrens"], nil, arTex, nil, nil, nil, nil, nil, 3.2, 1413},
+			{"Arrow", 20.6, 16.1, L["Darkshore"], nil, arTex, nil, nil, nil, nil, nil, 6.1, 1439},
+			{"Arrow", 9.5, 10.7, L["Darkshore"], L["Twilight Shore"], arTex, nil, nil, nil, nil, nil, 5.3, 1439},
 		},
 		--[[Thousand Needles]] [1441] = {
 			{"FlightH", 45.1, 49.1, L["Freewind Post"] .. ", " .. L["Thousand Needles"], nil, tHTex, nil, nil},
