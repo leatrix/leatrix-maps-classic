@@ -1,4 +1,4 @@
-1.15.18.alpha.1 - 13th February 2024
+1.15.18 - 14th February 2024
 - Updated Hillsbrad Foothills to Arathi Highlands zone crossing.
 
 1.15.17 - 7th February 2024
