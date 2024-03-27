@@ -1,4 +1,7 @@
-﻿1.15.18 - 14th February 2024
+﻿1.15.24 - 27th March 2024
+- Leatrix addons for Cataclysm Classic will be available when Blizzard gives me access to Cataclysm Classic beta.  If you wish to request that Blizzard gives me access to the beta, send an email to cs@blizzard.com.
+
+1.15.18 - 14th February 2024
 - Updated Hillsbrad Foothills to Arathi Highlands zone crossing.
 
 1.15.17 - 7th February 2024
