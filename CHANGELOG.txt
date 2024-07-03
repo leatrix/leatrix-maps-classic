@@ -1,4 +1,7 @@
-﻿1.15.30 - 8th May 2024
+﻿1.15.39.alpha.1 - 3rd July 2024
+- Fixed a situational issue which could cause a Lua error while moving the map.
+
+1.15.30 - 8th May 2024
 - Added ability to toggle the main panel by clicking the slash command logo in the interface options panel.
 
 1.15.25 - 3rd April 2024
