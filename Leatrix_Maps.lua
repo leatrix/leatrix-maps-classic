@@ -1699,11 +1699,13 @@
 				end
 			end)
 			WorldMapFrame:SetScript("OnDragStop", function()
-				-- WorldMapFrame:StopMovingOrSizing()
-				WorldMapTitleButton_OnDragStop()
-				WorldMapFrame:SetUserPlaced(false)
-				-- Save map frame position
-				LeaMapsLC["MapPosA"], void, LeaMapsLC["MapPosR"], LeaMapsLC["MapPosX"], LeaMapsLC["MapPosY"] = WorldMapFrame:GetPoint()
+				if LeaMapsLC["UnlockMapFrame"] == "On" then
+					-- WorldMapFrame:StopMovingOrSizing()
+					WorldMapTitleButton_OnDragStop()
+					WorldMapFrame:SetUserPlaced(false)
+					-- Save map frame position
+					LeaMapsLC["MapPosA"], void, LeaMapsLC["MapPosR"], LeaMapsLC["MapPosX"], LeaMapsLC["MapPosY"] = WorldMapFrame:GetPoint()
+				end
 			end)
 
 			-- Set position on startup
