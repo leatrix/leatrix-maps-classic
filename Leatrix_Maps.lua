@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.46 (28th August 2024)
+	-- 	Leatrix Maps 1.15.47.alpha.1 (28th August 2024)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.46"
+	LeaMapsLC["AddonVer"] = "1.15.47.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -28,7 +28,7 @@
 			end)
 			return
 		end
-		if gametocversion and gametocversion == 11500 then
+		if gametocversion and gametocversion == 11504 then
 			LeaMapsLC.NewPatch = true
 		end
 	end
