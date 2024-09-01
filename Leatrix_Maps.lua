@@ -2613,7 +2613,12 @@
 
 		do
 
-			LeaMapsLC:CreateDropDown("ZoneMapMenu", "Zone Map", LeaMapsLC["PageF"], 146, "TOPLEFT", 16, -392, {L["Never"], L["Battlegrounds"], L["Always"]}, L["Choose where the zone map should be shown."])
+			if LeaMapsLC.NewPatch then
+				LeaMapsLC:CreateDropdownNew("ZoneMapMenu", "Zone Map", 146, "TOPLEFT", LeaMapsLC["PageF"], "TOPLEFT", 16, -392, {{L["Never"], 1}, {L["Battlegrounds"], 2}, {L["Always"], 3}}, L["Choose where the zone map should be shown."])
+				LeaMapsCB["ZoneMapMenu"]:SetWidth(170)
+			else
+				LeaMapsLC:CreateDropDown("ZoneMapMenu", "Zone Map", LeaMapsLC["PageF"], 146, "TOPLEFT", 16, -392, {L["Never"], L["Battlegrounds"], L["Always"]}, L["Choose where the zone map should be shown."])
+			end
 
 			-- Set zone map visibility
 			local function SetZoneMapStyle()
@@ -2639,8 +2644,12 @@
 			SetZoneMapStyle()
 
 			-- Set style when a drop menu is selected (procs when the list is hidden)
-			LeaMapsCB["ListFrameZoneMapMenu"]:HookScript("OnHide", SetZoneMapStyle)
-			LeaMapsCB["ListFrameZoneMapMenu"]:SetFrameLevel(30)
+			if LeaMapsLC.NewPatch then
+				LeaMapsCB["ZoneMapMenu"]:RegisterCallback("OnUpdate", SetZoneMapStyle)
+			else
+				LeaMapsCB["ListFrameZoneMapMenu"]:HookScript("OnHide", SetZoneMapStyle)
+				LeaMapsCB["ListFrameZoneMapMenu"]:SetFrameLevel(30)
+			end
 
 		end
 
@@ -2944,6 +2953,27 @@
 		mbtn:HookScript("OnMouseUp", function() mbtn.Left:Hide(); mbtn.Middle:Hide(); mbtn.Right:Hide() end)
 
 		return mbtn
+	end
+
+	-- Create a dropdown menu (using standard dropdown template)
+	function LeaMapsLC:CreateDropdownNew(frame, label, width, anchor, parent, relative, x, y, items)
+
+		local RadioDropdown = CreateFrame("DropdownButton", nil, parent, "WowStyle1DropdownTemplate")
+		LeaMapsCB[frame] = RadioDropdown
+		RadioDropdown:SetPoint(anchor, parent, relative, x, y)
+
+		local function IsSelected(value)
+			return value == LeaMapsLC[frame]
+		end
+
+		local function SetSelected(value)
+			LeaMapsLC[frame] = value
+		end
+
+		MenuUtil.CreateRadioMenu(RadioDropdown, IsSelected, SetSelected, unpack(items))
+
+		local lf = RadioDropdown:CreateFontString(nil, "OVERLAY", "GameFontNormal"); lf:SetPoint("TOPLEFT", RadioDropdown, 0, 20); lf:SetPoint("TOPRIGHT", RadioDropdown, -5, 20); lf:SetJustifyH("LEFT"); lf:SetText(L[label])
+
 	end
 
 	-- Create a dropdown menu (using custom function to avoid taint)
