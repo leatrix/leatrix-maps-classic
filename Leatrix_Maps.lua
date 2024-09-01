@@ -3267,7 +3267,7 @@
 		-- Create slider control
 		local Slider
 		if LeaMapsLC.NewPatch then
-			Slider = CreateFrame("Slider", "LeaMapsGlobalSlider" .. field, frame, "UISliderTemplate")
+			Slider = CreateFrame("Slider", "LeaMapsGlobalSlider" .. field, frame, "HorizontalSliderTemplate")
 		else
 			Slider = CreateFrame("Slider", "LeaMapsGlobalSlider" .. field, frame, "OptionssliderTemplate")
 		end
