@@ -2076,9 +2076,19 @@
 			-- Create table to store revealed overlays
 			local overlayTextures = {}
 			local bfoverlayTextures = {}
+			local tex = {} -- LewMapsLC.NewPatch
 
 			-- Function to refresh overlays (Blizzard_SharedMapDataProviders\MapExplorationDataProvider)
 			local function MapExplorationPin_RefreshOverlays(pin, fullUpdate)
+
+				-- Remove existing textures
+				if LeaMapsLC.NewPatch then
+					for k, v in pairs(tex) do
+						v:SetVertexColor(1, 1, 1, 1)
+					end
+					wipe(tex)
+				end
+
 				overlayTextures = {}
 				local mapID = WorldMapFrame.mapID; if not mapID then return end
 				local artID = C_Map.GetMapArtID(mapID); if not artID or not Leatrix_Maps["Reveal"][artID] then return end
@@ -2126,6 +2136,9 @@
 							end
 							for k = 1, numTexturesWide do
 								local texture = pin.overlayTexturePool:Acquire()
+								if LeaMapsLC.NewPatch then
+									tinsert(tex, texture)
+								end
 								if ( k < numTexturesWide ) then
 									texturePixelWidth = TILE_SIZE_WIDTH
 									textureFileWidth = TILE_SIZE_WIDTH
