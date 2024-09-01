@@ -1727,13 +1727,29 @@
 			WorldMapFrame:SetScript("OnDragStart", function()
 				if LeaMapsLC["UnlockMapFrame"] == "On" then
 					-- WorldMapFrame:StartMoving()
-					WorldMapTitleButton_OnDragStart()
+					if LeaMapsLC.NewPatch then
+						-- WorldMapTitleButton_OnDragStart does nothing if map is locked
+						WorldMapScreenAnchor:ClearAllPoints()
+						WorldMapFrame:ClearAllPoints()
+						WorldMapFrame:StartMoving()
+					else
+						WorldMapTitleButton_OnDragStart()
+					end
 				end
 			end)
 			WorldMapFrame:SetScript("OnDragStop", function()
 				if LeaMapsLC["UnlockMapFrame"] == "On" then
 					-- WorldMapFrame:StopMovingOrSizing()
-					WorldMapTitleButton_OnDragStop()
+					if LeaMapsLC.NewPatch then
+						-- WorldMapTitleButton_OnDragStop does nothing if map is locked
+						WorldMapFrame:StopMovingOrSizing()
+						-- move the anchor
+						WorldMapScreenAnchor:StartMoving()
+						WorldMapScreenAnchor:SetPoint("TOPLEFT", WorldMapFrame)
+						WorldMapScreenAnchor:StopMovingOrSizing()
+					else
+						WorldMapTitleButton_OnDragStop()
+					end
 					WorldMapFrame:SetUserPlaced(false)
 					-- Save map frame position
 					LeaMapsLC["MapPosA"], void, LeaMapsLC["MapPosR"], LeaMapsLC["MapPosX"], LeaMapsLC["MapPosY"] = WorldMapFrame:GetPoint()
