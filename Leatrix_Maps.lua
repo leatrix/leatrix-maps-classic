@@ -3290,7 +3290,11 @@
 		end
 
 		-- Set label
-		if not LeaMapsLC.NewPatch then
+		if LeaMapsLC.NewPatch then
+			local labelfrm = Slider:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+			labelfrm:SetPoint("TOP", Slider, "TOP", 0, 12)
+			labelfrm:SetText(L[label])
+		else
 			_G[Slider:GetName().."Text"]:SetText(L[label])
 		end
 
