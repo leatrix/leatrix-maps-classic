@@ -134,7 +134,12 @@
 		-- Hide world map dropdown menus to prevent GuildControlSetRank() taint
 		local menuTempFrame = CreateFrame("FRAME")
 		menuTempFrame:Hide()
-		if not LeaMapsLC.NewPatch then
+		if LeaMapsLC.NewPatch then
+			WorldMapContinentDropdown:SetParent(menuTempFrame)
+			WorldMapZoneDropdown:SetParent(menuTempFrame)
+			WorldMapZoomOutButton:SetParent(menuTempFrame)
+			WorldMapZoneMinimapDropdown:SetParent(menuTempFrame)
+		else
 			WorldMapContinentDropDown:SetParent(menuTempFrame)
 			WorldMapZoneDropDown:SetParent(menuTempFrame)
 			WorldMapZoomOutButton:SetParent(menuTempFrame)
@@ -403,8 +408,13 @@
 			if LeaMapsLC["UseDefaultMap"] == "On" then
 
 				hooksecurefunc(WorldMapFrame, "Minimize", function()
-					outerFrame:ClearAllPoints()
-					outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, -6)
+					if LeaMapsLC.NewPatch then
+						outerFrame:ClearAllPoints()
+						outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, 20)
+					else
+						outerFrame:ClearAllPoints()
+						outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, -6)
+					end
 				end)
 
 				hooksecurefunc(WorldMapFrame, "Maximize", function()
