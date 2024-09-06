@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.47 (4th September 2024)
+	-- 	Leatrix Maps 1.15.48.alpha.1 (4th September 2024)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.47"
+	LeaMapsLC["AddonVer"] = "1.15.48.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -3277,7 +3277,7 @@
 		-- Create slider control
 		local Slider
 		if LeaMapsLC.NewPatch then
-			Slider = CreateFrame("Slider", "LeaMapsGlobalSlider" .. field, frame, "HorizontalSliderTemplate")
+			Slider = CreateFrame("Slider", "LeaMapsGlobalSlider" .. field, frame, "UISliderTemplate")
 		else
 			Slider = CreateFrame("Slider", "LeaMapsGlobalSlider" .. field, frame, "OptionssliderTemplate")
 		end
