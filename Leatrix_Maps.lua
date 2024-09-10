@@ -243,6 +243,11 @@
 
 			if LeaMapsLC.NewPatch then
 
+				-- Continent translations
+				L["Eastern Kingdoms"] = POSTMASTER_PIPE_EASTERNKINGDOMS
+				L["Kalimdor"] = POSTMASTER_PIPE_KALIMDOR
+				L["Azeroth"] = AZEROTH
+
 				-- Create outer frame for dropdown menus
 				local outerFrame = CreateFrame("FRAME", nil, WorldMapFrame)
 				outerFrame:SetSize(360, 20)
@@ -275,11 +280,6 @@
 					return RadioDropdown
 
 				end
-
-				-- Continent translations
-				L["Eastern Kingdoms"] = POSTMASTER_PIPE_EASTERNKINGDOMS
-				L["Kalimdor"] = POSTMASTER_PIPE_KALIMDOR
-				L["Azeroth"] = AZEROTH
 
 				-- Create No zones available dropdown menu
 				LeaMapsLC["ZoneMapNoneMenu"] = 1
