@@ -248,7 +248,7 @@
 
 					local RadioDropdown = CreateFrame("DropdownButton", nil, WorldMapFrame, "WowStyle1DropdownTemplate")
 					LeaMapsCB[frame] = RadioDropdown
-					RadioDropdown:SetPoint(anchor, WorldMapFrame, relative, x, y)
+					RadioDropdown:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", x, y)
 					RadioDropdown:SetFrameLevel(30)
 					RadioDropdown:SetWidth(184)
 
@@ -283,10 +283,9 @@
 
 				-- Create No zones available dropdown menu
 				LeaMapsLC["ZoneMapNoneMenu"] = 1
-				local nodd = LeaMapsLC:CreateDropDown("ZoneMapNoneMenu", "", WorldMapFrame, 180, "TOP", -80, -35, {"---"}, "")
-				nodd:ClearAllPoints()
-				nodd:SetPoint("TOPRIGHT", outerFrame, "TOPRIGHT", 0, 0)
-				nodd.btn:Disable()
+
+				local nodd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapNoneMenu", "", 180, "TOPLEFT", WorldMapFrame, "TOPLEFT", 200, -20, {{"---"}})
+				nodd:Disable()
 
 				-- Create Eastern Kingdoms dropdown menu
 				LeaMapsLC["ZoneMapEasternMenu"] = 1
@@ -305,9 +304,7 @@
 				tinsert(mapEasternString, 1, {L["Eastern Kingdoms"], 1})
 				tinsert(mapEasternTable, 1, {zonename = L["Eastern Kingdoms"], mapid = 1415})
 
-				local ekdd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapEasternMenu", "", 180, "TOPLEFT", WorldMapFrame, "TOPLEFT", -80, -35, mapEasternString)
-				ekdd:ClearAllPoints()
-				ekdd:SetPoint("TOPLEFT", outerFrame, "TOPLEFT", 184, -20)
+				local ekdd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapEasternMenu", "", 180, "TOPLEFT", WorldMapFrame, "TOPLEFT", 200, -20, mapEasternString)
 
 				LeaMapsCB["ZoneMapEasternMenu"]:RegisterCallback("OnUpdate", function()
 					WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
@@ -321,21 +318,18 @@
 				if (zones) then
 					for i, zoneInfo in ipairs(zones) do
 						tinsert(mapKalimdorTable, {zonename = zoneInfo.name, mapid = zoneInfo.mapID})
-						tinsert(mapKalimdorString, zoneInfo.name)
+						tinsert(mapKalimdorString, {zoneInfo.name, i + 1})
 					end
 				end
 
-				table.sort(mapKalimdorString, function(k, v) return k < v end)
-				table.sort(mapKalimdorTable, function(k, v) return k.zonename < v.zonename end)
+				table.sort(mapKalimdorString, function(k, v) return k[1] < v[1] end)
 
-				tinsert(mapKalimdorString, 1, L["Kalimdor"])
+				tinsert(mapKalimdorString, 1, {L["Kalimdor"], 1})
 				tinsert(mapKalimdorTable, 1, {zonename = L["Kalimdor"], mapid = 1414})
 
-				local kmdd = LeaMapsLC:CreateDropDown("ZoneMapKalimdorMenu", "", WorldMapFrame, 180, "TOP", -80, -35, mapKalimdorString, "")
-				kmdd:ClearAllPoints()
-				kmdd:SetPoint("TOPRIGHT", outerFrame, "TOPRIGHT", 0, 0)
+				local kmdd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapKalimdorMenu", "", 180, "TOPLEFT", WorldMapFrame, "TOPLEFT", 200, -20, mapKalimdorString)
 
-				LeaMapsCB["ListFrameZoneMapKalimdorMenu"]:HookScript("OnHide", function()
+				LeaMapsCB["ZoneMapKalimdorMenu"]:RegisterCallback("OnUpdate", function()
 					WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
 				end)
 
@@ -344,24 +338,16 @@
 
 				local mapContinentTable, mapContinentString = {}, {}
 
-				tinsert(mapContinentString, 1, L["Eastern Kingdoms"])
+				tinsert(mapContinentString, 1, {L["Eastern Kingdoms"], 1})
 				tinsert(mapContinentTable, 1, {zonename = L["Eastern Kingdoms"], mapid = 1415})
-				tinsert(mapContinentString, 2, L["Kalimdor"])
+				tinsert(mapContinentString, 2, {L["Kalimdor"], 2})
 				tinsert(mapContinentTable, 2, {zonename = L["Kalimdor"], mapid = 1414})
-				tinsert(mapContinentString, 3, L["Azeroth"])
+				tinsert(mapContinentString, 3, {L["Azeroth"], 3})
 				tinsert(mapContinentTable, 3, {zonename = L["Azeroth"], mapid = 947})
 
-				local cond = LeaMapsLC:CreateDropDown("ZoneMapContinentMenu", "", WorldMapFrame, 180, "TOP", -80, -35, mapContinentString, "")
-				cond:ClearAllPoints()
-				cond:SetPoint("TOPLEFT", outerFrame, "TOPLEFT", 0, 0)
+				local cond = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapContinentMenu", "", 180, "TOPLEFT", WorldMapFrame, "TOPLEFT", 16, -20, mapContinentString)
 
-				-- Create Azeroth lists
-				local mapAzerothTable, mapAzerothString = {}, {}
-				tinsert(mapAzerothString, 1, L["Azeroth"])
-				tinsert(mapAzerothTable, 1, {zonename = L["Azeroth"], mapid = 947})
-
-				-- Continent dropdown menu handler
-				LeaMapsCB["ListFrameZoneMapContinentMenu"]:HookScript("OnHide", function()
+				LeaMapsCB["ZoneMapContinentMenu"]:RegisterCallback("OnUpdate", function()
 					ekdd:Hide(); kmdd:Hide(); nodd:Hide()
 					if LeaMapsLC["ZoneMapContinentMenu"] == 1 then
 						ekdd:Show()
@@ -375,17 +361,16 @@
 					end
 				end)
 
+				-- Create Azeroth lists
+				local mapAzerothTable, mapAzerothString = {}, {}
+				tinsert(mapAzerothString, 1, {L["Azeroth"], i})
+				tinsert(mapAzerothTable, 1, {zonename = L["Azeroth"], mapid = 947})
+
 				-- Function to set dropdown menu
 				local function SetMapControls()
 
 					-- Hide dropdown menus
 					ekdd:Hide(); kmdd:Hide(); cond:Hide(); nodd:Hide()
-
-					-- Hide dropdown menu list items
-					-- LeaMapsCB["ListFrameZoneMapEasternMenu"]:Hide() -- LeaMapsLC.NewPatch
-					LeaMapsCB["ListFrameZoneMapKalimdorMenu"]:Hide()
-					LeaMapsCB["ListFrameZoneMapContinentMenu"]:Hide()
-					LeaMapsCB["ListFrameZoneMapNoneMenu"]:Hide()
 
 					-- Eastern Kingdoms
 					for k, v in pairs(mapEasternTable) do
@@ -424,13 +409,8 @@
 				if LeaMapsLC["UseDefaultMap"] == "On" then
 
 					hooksecurefunc(WorldMapFrame, "Minimize", function()
-						if LeaMapsLC.NewPatch then
-							outerFrame:ClearAllPoints()
-							outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, 20)
-						else
-							outerFrame:ClearAllPoints()
-							outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, -6)
-						end
+						outerFrame:ClearAllPoints()
+						outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, 20)
 					end)
 
 					hooksecurefunc(WorldMapFrame, "Maximize", function()
