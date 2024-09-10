@@ -447,18 +447,10 @@
 				local outerFrame = CreateFrame("FRAME", nil, WorldMapFrame)
 				outerFrame:SetSize(360, 20)
 
-				if LeaMapsLC.NewPatch then
-					if LeaMapsLC["UseDefaultMap"] == "Off" then
-						outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 16, 0)
-					else
-						outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, 20)
-					end
+				if LeaMapsLC["UseDefaultMap"] == "Off" then
+					outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 16, -24)
 				else
-					if LeaMapsLC["UseDefaultMap"] == "Off" then
-						outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 16, -24)
-					else
-						outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, -6)
-					end
+					outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, -6)
 				end
 
 				-- Create No zones available dropdown menu
