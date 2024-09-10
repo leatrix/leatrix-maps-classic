@@ -243,12 +243,22 @@
 
 			if LeaMapsLC.NewPatch then
 
-				-- Create a dropdown menu (using standard dropdown template)
-				function LeaMapsLC:CreateZoneMenuDropdown(frame, label, width, anchor, parent, relative, x, y, items)
+				-- Create outer frame for dropdown menus
+				local outerFrame = CreateFrame("FRAME", nil, WorldMapFrame)
+				outerFrame:SetSize(360, 20)
 
-					local RadioDropdown = CreateFrame("DropdownButton", nil, WorldMapFrame, "WowStyle1DropdownTemplate")
+				if LeaMapsLC["UseDefaultMap"] == "Off" then
+					outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 16, 0)
+				else
+					outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, 20)
+				end
+
+				-- Create a zone menu dropdown menu (using standard dropdown template)
+				function LeaMapsLC:CreateZoneMenuDropdown(frame, x, y, items)
+
+					local RadioDropdown = CreateFrame("DropdownButton", nil, outerFrame, "WowStyle1DropdownTemplate")
 					LeaMapsCB[frame] = RadioDropdown
-					RadioDropdown:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", x, y)
+					RadioDropdown:SetPoint("TOPLEFT", outerFrame, "TOPLEFT", x, y)
 					RadioDropdown:SetFrameLevel(30)
 					RadioDropdown:SetWidth(184)
 
@@ -271,20 +281,10 @@
 				L["Kalimdor"] = POSTMASTER_PIPE_KALIMDOR
 				L["Azeroth"] = AZEROTH
 
-				-- Create outer frame for dropdown menus
-				local outerFrame = CreateFrame("FRAME", nil, WorldMapFrame)
-				outerFrame:SetSize(360, 20)
-
-				if LeaMapsLC["UseDefaultMap"] == "Off" then
-					outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 16, 0)
-				else
-					outerFrame:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 14, 20)
-				end
-
 				-- Create No zones available dropdown menu
 				LeaMapsLC["ZoneMapNoneMenu"] = 1
 
-				local nodd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapNoneMenu", "", 180, "TOPLEFT", WorldMapFrame, "TOPLEFT", 200, -20, {{"---"}})
+				local nodd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapNoneMenu", 184, -20, {{"---"}})
 				nodd:Disable()
 
 				-- Create Eastern Kingdoms dropdown menu
@@ -304,7 +304,7 @@
 				tinsert(mapEasternString, 1, {L["Eastern Kingdoms"], 1})
 				tinsert(mapEasternTable, 1, {zonename = L["Eastern Kingdoms"], mapid = 1415})
 
-				local ekdd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapEasternMenu", "", 180, "TOPLEFT", WorldMapFrame, "TOPLEFT", 200, -20, mapEasternString)
+				local ekdd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapEasternMenu", 184, -20, mapEasternString)
 
 				LeaMapsCB["ZoneMapEasternMenu"]:RegisterCallback("OnUpdate", function()
 					WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
@@ -327,7 +327,7 @@
 				tinsert(mapKalimdorString, 1, {L["Kalimdor"], 1})
 				tinsert(mapKalimdorTable, 1, {zonename = L["Kalimdor"], mapid = 1414})
 
-				local kmdd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapKalimdorMenu", "", 180, "TOPLEFT", WorldMapFrame, "TOPLEFT", 200, -20, mapKalimdorString)
+				local kmdd = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapKalimdorMenu", 184, -20, mapKalimdorString)
 
 				LeaMapsCB["ZoneMapKalimdorMenu"]:RegisterCallback("OnUpdate", function()
 					WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
@@ -345,7 +345,7 @@
 				tinsert(mapContinentString, 3, {L["Azeroth"], 3})
 				tinsert(mapContinentTable, 3, {zonename = L["Azeroth"], mapid = 947})
 
-				local cond = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapContinentMenu", "", 180, "TOPLEFT", WorldMapFrame, "TOPLEFT", 16, -20, mapContinentString)
+				local cond = LeaMapsLC:CreateZoneMenuDropdown("ZoneMapContinentMenu", 0, -20, mapContinentString)
 
 				LeaMapsCB["ZoneMapContinentMenu"]:RegisterCallback("OnUpdate", function()
 					ekdd:Hide(); kmdd:Hide(); nodd:Hide()
