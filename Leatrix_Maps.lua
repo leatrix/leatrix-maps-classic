@@ -294,7 +294,7 @@
 				local zones = C_Map.GetMapChildrenInfo(1415)
 				if (zones) then
 					for i, zoneInfo in ipairs(zones) do
-						tinsert(mapEasternTable, {zonename = zoneInfo.name, mapid = zoneInfo.mapID, i})
+						tinsert(mapEasternTable, {zonename = zoneInfo.name, mapid = zoneInfo.mapID})
 						tinsert(mapEasternString, {zoneInfo.name, i + 1})
 					end
 				end
