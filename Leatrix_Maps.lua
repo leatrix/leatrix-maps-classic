@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.49.alpha.1 (11th September 2024)
+	-- 	Leatrix Maps 1.15.49 (18th September 2024)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.49.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.15.49"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -134,10 +134,17 @@
 		-- Hide default world map dropdown menus
 		local menuTempFrame = CreateFrame("FRAME")
 		menuTempFrame:Hide()
-		WorldMapContinentDropdown:SetParent(menuTempFrame)
-		WorldMapZoneDropdown:SetParent(menuTempFrame)
-		WorldMapZoomOutButton:SetParent(menuTempFrame)
-		WorldMapZoneMinimapDropdown:SetParent(menuTempFrame)
+		if LeaMapsLC.NewPatch then
+			WorldMapContinentDropdown:SetParent(menuTempFrame)
+			WorldMapZoneDropdown:SetParent(menuTempFrame)
+			WorldMapZoomOutButton:SetParent(menuTempFrame)
+			WorldMapZoneMinimapDropdown:SetParent(menuTempFrame)
+		else
+			WorldMapContinentDropDown:SetParent(menuTempFrame)
+			WorldMapZoneDropDown:SetParent(menuTempFrame)
+			WorldMapZoomOutButton:SetParent(menuTempFrame)
+			WorldMapZoneMinimapDropDown:SetParent(menuTempFrame)
+		end
 
 		-- Function to show world map title button if default windowed map is showing
 		local function SetWorldMapTitleButton()

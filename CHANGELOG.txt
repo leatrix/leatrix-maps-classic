@@ -1,4 +1,4 @@
-﻿1.15.49.alpha.1 - 11th September 2024
+﻿1.15.49 - 18th September 2024
 - PTR (1.15.4): Game API updates.
 
 1.15.48 - 11th September 2024
