@@ -255,17 +255,16 @@
 				end
 			end
 
-			-- Add battlegrounds
-			tinsert(mapEasternString,  {L["Alterac Valley"], #mapEasternTable + 1})
-			tinsert(mapEasternTable,  {zonename = L["Alterac Valley"], mapid = 1459})
-
-			tinsert(mapEasternString,  {L["Arathi Basin"], #mapEasternTable + 1})
-			tinsert(mapEasternTable,  {zonename = L["Arathi Basin"], mapid = 1461})
-
 			table.sort(mapEasternString, function(k, v) return k[1] < v[1] end)
 
 			tinsert(mapEasternString, 1, {L["Eastern Kingdoms"], 1})
 			tinsert(mapEasternTable, 1, {zonename = L["Eastern Kingdoms"], mapid = 1415})
+
+			-- Add battlegrounds
+			tinsert(mapEasternString,  {L["Alterac Valley"], #mapEasternTable + 1})
+			tinsert(mapEasternTable,  {zonename = L["Alterac Valley"], mapid = 1459})
+			tinsert(mapEasternString,  {L["Arathi Basin"], #mapEasternTable + 1})
+			tinsert(mapEasternTable,  {zonename = L["Arathi Basin"], mapid = 1461})
 
 			local ekdd = LeaMapsLC:CreateDropdownNew("ZoneMapEasternMenu", nil, 184, "TOPLEFT", outerFrame, "TOPLEFT", 184, -20, mapEasternString)
 			ekdd:SetFrameLevel(30)
@@ -286,14 +285,14 @@
 				end
 			end
 
-			-- Add battlegrounds
-			tinsert(mapKalimdorString,  {L["Warsong Gulch"], #mapKalimdorTable + 2})
-			tinsert(mapKalimdorTable,  {zonename = L["Warsong Gulch"], mapid = 1460})
-
 			table.sort(mapKalimdorString, function(k, v) return k[1] < v[1] end)
 
 			tinsert(mapKalimdorString, 1, {L["Kalimdor"], 1})
 			tinsert(mapKalimdorTable, 1, {zonename = L["Kalimdor"], mapid = 1414})
+
+			-- Add battlegrounds
+			tinsert(mapKalimdorString,  {L["Warsong Gulch"], #mapKalimdorTable + 1})
+			tinsert(mapKalimdorTable,  {zonename = L["Warsong Gulch"], mapid = 1460})
 
 			local kmdd = LeaMapsLC:CreateDropdownNew("ZoneMapKalimdorMenu", nil, 184, "TOPLEFT", outerFrame, "TOPLEFT", 184, -20, mapKalimdorString)
 			kmdd:SetFrameLevel(30)
