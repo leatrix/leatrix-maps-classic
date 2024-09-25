@@ -263,6 +263,7 @@
 
 			table.sort(mapEasternString, function(k, v) return k[1] < v[1] end)
 
+			-- Add battlegrounds
 			tinsert(mapEasternString, 1, {L["Eastern Kingdoms"], 1})
 			tinsert(mapEasternTable, 1, {zonename = L["Eastern Kingdoms"], mapid = 1415})
 
@@ -285,7 +286,8 @@
 				end
 			end
 
-			tinsert(mapKalimdorString,  {L["Warsong Gulch"], #mapKalimdorTable + 1})
+			-- Add battlegrounds
+			tinsert(mapKalimdorString,  {L["Warsong Gulch"], #mapKalimdorTable + 2})
 			tinsert(mapKalimdorTable,  {zonename = L["Warsong Gulch"], mapid = 1460})
 
 			table.sort(mapKalimdorString, function(k, v) return k[1] < v[1] end)
