@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.50 (25th September 2024)
+	-- 	Leatrix Maps 1.15.51.alpha.1 (25th September 2024)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.50"
+	LeaMapsLC["AddonVer"] = "1.15.51.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -260,17 +260,13 @@
 			tinsert(mapEasternString, 1, {L["Eastern Kingdoms"], 1})
 			tinsert(mapEasternTable, 1, {zonename = L["Eastern Kingdoms"], mapid = 1415})
 
-			-- Add battlegrounds
-			tinsert(mapEasternString,  {L["Alterac Valley"], #mapEasternTable + 1})
-			tinsert(mapEasternTable,  {zonename = L["Alterac Valley"], mapid = 1459})
-			tinsert(mapEasternString,  {L["Arathi Basin"], #mapEasternTable + 1})
-			tinsert(mapEasternTable,  {zonename = L["Arathi Basin"], mapid = 1461})
-
 			local ekdd = LeaMapsLC:CreateDropdown("ZoneMapEasternMenu", nil, 184, "TOPLEFT", outerFrame, "TOPLEFT", 184, -20, mapEasternString)
 			ekdd:SetFrameLevel(30)
 
 			LeaMapsCB["ZoneMapEasternMenu"]:RegisterCallback("OnUpdate", function()
-				WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
+				if not IsInInstance() then
+					WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
+				end
 			end)
 
 			-- Create Kalimdor dropdown menu
@@ -290,15 +286,13 @@
 			tinsert(mapKalimdorString, 1, {L["Kalimdor"], 1})
 			tinsert(mapKalimdorTable, 1, {zonename = L["Kalimdor"], mapid = 1414})
 
-			-- Add battlegrounds
-			tinsert(mapKalimdorString,  {L["Warsong Gulch"], #mapKalimdorTable + 1})
-			tinsert(mapKalimdorTable,  {zonename = L["Warsong Gulch"], mapid = 1460})
-
 			local kmdd = LeaMapsLC:CreateDropdown("ZoneMapKalimdorMenu", nil, 184, "TOPLEFT", outerFrame, "TOPLEFT", 184, -20, mapKalimdorString)
 			kmdd:SetFrameLevel(30)
 
 			LeaMapsCB["ZoneMapKalimdorMenu"]:RegisterCallback("OnUpdate", function()
-				WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
+				if not IsInInstance() then
+					WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
+				end
 			end)
 
 			-- Create continent dropdown menu
@@ -318,15 +312,17 @@
 
 			LeaMapsCB["ZoneMapContinentMenu"]:RegisterCallback("OnUpdate", function()
 				ekdd:Hide(); kmdd:Hide(); nodd:Hide()
-				if LeaMapsLC["ZoneMapContinentMenu"] == 1 then
-					ekdd:Show()
-					WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
-				elseif LeaMapsLC["ZoneMapContinentMenu"] == 2 then
-					kmdd:Show()
-					WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
-				elseif LeaMapsLC["ZoneMapContinentMenu"] == 3 then
-					nodd:Show()
-					WorldMapFrame:SetMapID(947)
+				if not IsInInstance() then
+					if LeaMapsLC["ZoneMapContinentMenu"] == 1 then
+						ekdd:Show()
+						WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
+					elseif LeaMapsLC["ZoneMapContinentMenu"] == 2 then
+						kmdd:Show()
+						WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
+					elseif LeaMapsLC["ZoneMapContinentMenu"] == 3 then
+						nodd:Show()
+						WorldMapFrame:SetMapID(947)
+					end
 				end
 			end)
 

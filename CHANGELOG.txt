@@ -1,6 +1,8 @@
-﻿1.15.50 - 25th September 2024
+﻿1.15.51.alpha.1 - 25th September 2024
+- Game API updates.
+
+1.15.50 - 25th September 2024
 - Updated for game version 1.15.4.
-- For 'Show zone menus', Alterac Valley, Arathi Basin and Warsong Gulch are now shown in their respective zone menus.
 
 1.15.49 - 18th September 2024
 - PTR (1.15.4): Game API updates.
