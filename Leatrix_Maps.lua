@@ -255,6 +255,7 @@
 				end
 			end
 
+			-- Add battlegrounds
 			tinsert(mapEasternString,  {L["Alterac Valley"], #mapEasternTable + 1})
 			tinsert(mapEasternTable,  {zonename = L["Alterac Valley"], mapid = 1459})
 
@@ -263,7 +264,6 @@
 
 			table.sort(mapEasternString, function(k, v) return k[1] < v[1] end)
 
-			-- Add battlegrounds
 			tinsert(mapEasternString, 1, {L["Eastern Kingdoms"], 1})
 			tinsert(mapEasternTable, 1, {zonename = L["Eastern Kingdoms"], mapid = 1415})
 
