@@ -255,6 +255,12 @@
 				end
 			end
 
+			tinsert(mapEasternString,  {L["Alterac Valley"], #mapEasternTable + 1})
+			tinsert(mapEasternTable,  {zonename = L["Alterac Valley"], mapid = 1459})
+
+			tinsert(mapEasternString,  {L["Arathi Basin"], #mapEasternTable + 1})
+			tinsert(mapEasternTable,  {zonename = L["Arathi Basin"], mapid = 1461})
+
 			table.sort(mapEasternString, function(k, v) return k[1] < v[1] end)
 
 			tinsert(mapEasternString, 1, {L["Eastern Kingdoms"], 1})
@@ -278,6 +284,9 @@
 					tinsert(mapKalimdorString, {zoneInfo.name, i + 1})
 				end
 			end
+
+			tinsert(mapKalimdorString,  {L["Warsong Gulch"], #mapKalimdorTable + 1})
+			tinsert(mapKalimdorTable,  {zonename = L["Warsong Gulch"], mapid = 1460})
 
 			table.sort(mapKalimdorString, function(k, v) return k[1] < v[1] end)
 
