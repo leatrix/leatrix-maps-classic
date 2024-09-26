@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.51.alpha.1 (25th September 2024)
+	-- 	Leatrix Maps 1.15.51 (26th September 2024)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.51.alpha.1"
+	LeaMapsLC["AddonVer"] = "1.15.51"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -390,9 +390,9 @@
 				local S = E:GetModule('Skins')
 				if E.private.skins.blizzard.enable and E.private.skins.blizzard.worldmap then
 					S:HandleDropDownBox(cond)
-					S:HandleDropDownBox(ekdd); ekdd:ClearAllPoints(); ekdd:SetPoint("LEFT", cond, "RIGHT", 10, 0)
-					S:HandleDropDownBox(kmdd); kmdd:ClearAllPoints(); kmdd:SetPoint("LEFT", cond, "RIGHT", 10, 0)
-					S:HandleDropDownBox(nodd); nodd:ClearAllPoints(); nodd:SetPoint("LEFT", cond, "RIGHT", 10, 0)
+					S:HandleDropDownBox(ekdd); ekdd:ClearAllPoints(); ekdd:SetPoint("LEFT", cond, "RIGHT", 4, 0)
+					S:HandleDropDownBox(kmdd); kmdd:ClearAllPoints(); kmdd:SetPoint("LEFT", cond, "RIGHT", 4, 0)
+					S:HandleDropDownBox(nodd); nodd:ClearAllPoints(); nodd:SetPoint("LEFT", cond, "RIGHT", 4, 0)
 				end
 			end
 
@@ -3457,6 +3457,12 @@
 					end
 				end
 			end
+
+			-- Lock and disable use default map option due to a bug in the game which prevents map movement
+			LeaMapsLC:LockItem(LeaMapsCB["UseDefaultMap"], true)
+			LeaMapsCB["UseDefaultMap"].tiptext = LeaMapsCB["UseDefaultMap"].tiptext .. "|n|n|cff00AAFF" .. "This setting cannot be used at the moment."
+			LeaMapsLC["UseDefaultMap"] = "Off"
+			LeaMapsDB["UseDefaultMap"] = "Off"
 
 		elseif event == "PLAYER_ENTERING_WORLD" then
 			-- Run main function
