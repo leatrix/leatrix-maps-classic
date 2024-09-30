@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.51 (26th September 2024)
+	-- 	Leatrix Maps 1.15.52 (30th September 2024)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.51"
+	LeaMapsLC["AddonVer"] = "1.15.52"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -263,7 +263,7 @@
 			local ekdd = LeaMapsLC:CreateDropdown("ZoneMapEasternMenu", nil, 184, "TOPLEFT", outerFrame, "TOPLEFT", 184, -20, mapEasternString)
 			ekdd:SetFrameLevel(30)
 
-			LeaMapsCB["ZoneMapEasternMenu"]:RegisterCallback("OnUpdate", function()
+			LeaMapsCB["ZoneMapEasternMenu"]:RegisterCallback("OnMenuClose", function()
 				if not IsInInstance() then
 					WorldMapFrame:SetMapID(mapEasternTable[LeaMapsLC["ZoneMapEasternMenu"]].mapid)
 				end
@@ -289,7 +289,7 @@
 			local kmdd = LeaMapsLC:CreateDropdown("ZoneMapKalimdorMenu", nil, 184, "TOPLEFT", outerFrame, "TOPLEFT", 184, -20, mapKalimdorString)
 			kmdd:SetFrameLevel(30)
 
-			LeaMapsCB["ZoneMapKalimdorMenu"]:RegisterCallback("OnUpdate", function()
+			LeaMapsCB["ZoneMapKalimdorMenu"]:RegisterCallback("OnMenuClose", function()
 				if not IsInInstance() then
 					WorldMapFrame:SetMapID(mapKalimdorTable[LeaMapsLC["ZoneMapKalimdorMenu"]].mapid)
 				end

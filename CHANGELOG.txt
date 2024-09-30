@@ -1,4 +1,7 @@
-﻿1.15.51 - 26th September 2024
+﻿1.15.52 - 30th September 2024
+- Fixed a compatibility issue with Questie.
+
+1.15.51 - 26th September 2024
 - Fixed compatibility with ElvUI.
 - The 'Use default map' option is currently unavailable due to a bug in the game code which affects map movement.
 - Game API updates.
