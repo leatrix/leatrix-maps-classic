@@ -310,7 +310,7 @@
 			local cond = LeaMapsLC:CreateDropdown("ZoneMapContinentMenu", nil, 184, "TOPLEFT", outerFrame, "TOPLEFT", 0, -20, mapContinentString)
 			cond:SetFrameLevel(30)
 
-			LeaMapsCB["ZoneMapContinentMenu"]:RegisterCallback("OnUpdate", function()
+			LeaMapsCB["ZoneMapContinentMenu"]:RegisterCallback("OnMenuClose", function()
 				ekdd:Hide(); kmdd:Hide(); nodd:Hide()
 				if not IsInInstance() then
 					if LeaMapsLC["ZoneMapContinentMenu"] == 1 then
