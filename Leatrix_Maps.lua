@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.52 (30th September 2024)
+	-- 	Leatrix Maps 1.15.53.alpha.1 (30th September 2024)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.52"
+	LeaMapsLC["AddonVer"] = "1.15.53.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -2571,7 +2571,7 @@
 			SetZoneMapStyle()
 
 			-- Set style when a drop menu is selected
-			LeaMapsCB["ZoneMapMenu"]:RegisterCallback("OnUpdate", SetZoneMapStyle)
+			LeaMapsCB["ZoneMapMenu"]:RegisterCallback("OnMenuClose", SetZoneMapStyle)
 
 		end
 
