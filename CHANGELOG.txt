@@ -1,4 +1,4 @@
-﻿1.15.53.alpha.1 - 30th September 2024
+﻿1.15.53 - 2nd October 2024
 - Game API updates.
 
 1.15.52 - 30th September 2024
