@@ -1,6 +1,6 @@
 ﻿
 	----------------------------------------------------------------------
-	-- 	Leatrix Maps 1.15.58 (6th November 2024)
+	-- 	Leatrix Maps 1.15.59.alpha.1 (6th November 2024)
 	----------------------------------------------------------------------
 
 	-- 10:Func, 20:Comm, 30:Evnt, 40:Panl
@@ -12,7 +12,7 @@
 	local LeaMapsLC, LeaMapsCB, LeaDropList, LeaConfigList, LeaLockList = {}, {}, {}, {}, {}
 
 	-- Version
-	LeaMapsLC["AddonVer"] = "1.15.58"
+	LeaMapsLC["AddonVer"] = "1.15.59.alpha.1"
 
 	-- Get locale table
 	local void, Leatrix_Maps = ...
@@ -35,8 +35,6 @@
 
 	-- Check for addons
 	if IsAddOnLoaded("ElvUI") then LeaMapsLC.ElvUI = unpack(ElvUI) end
-	if IsAddOnLoaded("Carbonite") then LeaMapsLC.Carbonite = true end
-	if IsAddOnLoaded("Demodal") then LeaMapsLC.Demodal = true end
 
 	-- Set bindings translations
 	_G.BINDING_NAME_LEATRIX_MAPS_GLOBAL_TOGGLE = L["Toggle panel"]
@@ -1732,23 +1730,12 @@
 				end
 			end)
 
-			-- Fix for Carbonite changing map position
-			if LeaMapsLC.Carbonite then
-				hooksecurefunc(WorldMapFrame, "Show", function()
-					if Nx.db.profile.Map.MaxOverride == false then
-						WorldMapFrame:ClearAllPoints()
-						WorldMapFrame:SetPoint(LeaMapsLC["MapPosA"], UIParent, LeaMapsLC["MapPosR"], LeaMapsLC["MapPosX"], LeaMapsLC["MapPosY"])
-						WorldMapTitleButton_OnDragStop()
-					end
-				end)
-			end
-
 			-- Fix for Demodal clamping the map frame to the screen
-			if LeaMapsLC.Demodal then
+			EventUtil.ContinueOnAddOnLoaded("Demodal",function()
 				if WorldMapFrame:IsClampedToScreen() then
 					WorldMapFrame:SetClampedToScreen(false)
 				end
-			end
+			end)
 
 		end
 

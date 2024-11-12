@@ -3,11 +3,11 @@
 ## Title: Leatrix Maps
 ## Notes: Enhancements for your maps.
 
-## Version: 1.15.58
+## Version: 1.15.59.alpha.1
 ## Author: Leatrix
 ## SavedVariables: LeaMapsDB
 
-## OptionalDeps: Leatrix_enUS, ElvUI, Demodal, Carbonite
+## OptionalDeps: Leatrix_enUS, ElvUI
 
 ## X-Curse-Project-ID: 324034
 
