@@ -1,6 +1,5 @@
-﻿1.15.59.alpha.1 - 6th November 2024
+﻿1.15.59 - 13th November 2024
 - Game API updates.
-- Removed the Carbonite fix as it doesn't seem to be needed anymore.
 
 1.15.53 - 2nd October 2024
 - Game API updates.
