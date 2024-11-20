@@ -1,4 +1,7 @@
-﻿1.15.59 - 13th November 2024
+﻿1.15.61 - 20th November 2024
+- Updated for game version 1.15.5.
+
+1.15.59 - 13th November 2024
 - Game API updates.
 
 1.15.53 - 2nd October 2024
